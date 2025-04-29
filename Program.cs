@@ -10,7 +10,7 @@ namespace Battaglia_Navale
     {
         static void Main(string[] args)
         {
-            //dichiarazione ed inizializzazione delle variabilis
+            //dichiarazione ed inizializzazione delle variabili
             int[,] player = new int[10, 10];
             int[,] ia = new int[10, 10];
             int[,] iaHidden = new int[10, 10];
