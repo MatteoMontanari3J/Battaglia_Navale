@@ -10,7 +10,10 @@ namespace Battaglia_Navale
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            //dichiarazione ed inizializzazione delle variabilis
+            int[,] player = new int[10, 10];
+            int[,] ia = new int[10, 10];
+            int[,] iaHidden = new int[10, 10];
 
             //fin
             Console.ReadKey();
