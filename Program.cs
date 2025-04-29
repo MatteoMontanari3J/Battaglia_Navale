@@ -10,6 +10,10 @@ namespace Battaglia_Navale
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello World!");
+
+            //fin
+            Console.ReadKey();
         }
     }
 }
