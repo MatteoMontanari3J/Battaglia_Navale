@@ -47,11 +47,11 @@ namespace Battaglia_Navale
 
             //dichiarazione ed inizializzazione delle variabili:
 
-            //matrici del campo di gioco
-            int[,] player = new int[10, 10];
-            int[,] playerHidden = new int[10, 10];
-            int[,] ia = new int[10, 10];
-            int[,] iaHidden = new int[10, 10];
+            //matrici del campo di gioco - 11 caselle perchè: 1.è più facile interragire con le coordinate da parte del giocatore 2.si usano come spazio per le lettere ad inizio codice
+            int[,] player = new int[11, 11];
+            int[,] playerHidden = new int[11, 11];
+            int[,] ia = new int[11, 11];
+            int[,] iaHidden = new int[11, 11];
 
             
 
