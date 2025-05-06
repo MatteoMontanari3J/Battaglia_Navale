@@ -22,6 +22,8 @@ namespace Battaglia_Navale
                  azzeramento booleano che determina l'inizio partita)
                 
                 -turno giocatore
+                    -stampa tabella giocatore
+                    -stampa tabella IA nascosta
                     prendere coordinate
                     -funzione sparare il colpo e vedere se si ha beccato o mancato
 
@@ -37,6 +39,9 @@ namespace Battaglia_Navale
                                     [algoritmo intelligenza] ottenere coordinate
 
                         -funzione sparare il colpo e vedere se si ha beccato o mancato
+
+                        -stampa tabella giocatore
+                        -stampa tabella IA nascosta
 
                         -controllo fine partita
                             si: -finepartita
