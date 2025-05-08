@@ -176,7 +176,7 @@ namespace Battaglia_Navale
         }
 
 
-                                            //qui non dovrebbe essere (char [,] player) ?
+                                            //qui non dovrebbe essere (char [,] ia) ?
         static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
         {
             int let = 65; // ascii indice della lettera 'A'
