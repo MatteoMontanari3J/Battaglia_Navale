@@ -77,7 +77,7 @@ namespace Battaglia_Navale
             Console.WriteLine("\n");
             TestBotFieldGeneration(ia); // Bot field
 
-            SelezioneDifficoltà(difficoltà);
+            SelezioneDifficoltà(ref difficoltà);
             if (difficoltà)
                 Console.WriteLine("true");
 
@@ -99,7 +99,7 @@ namespace Battaglia_Navale
             while (i == 0)
             {
                 //assegnazione valori
-                Console.WriteLine("scegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
+                Console.WriteLine("\n\nScegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
                 var = Convert.ToChar(Console.ReadLine());
                 //assegnazione della difficoltà selezionata
                 switch (var)
