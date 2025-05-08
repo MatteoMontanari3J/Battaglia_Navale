@@ -175,6 +175,8 @@ namespace Battaglia_Navale
             }
         }
 
+
+                                            //qui non dovrebbe essere (char [,] player) ?
         static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
         {
             int let = 65; // ascii indice della lettera 'A'
@@ -226,3 +228,9 @@ namespace Battaglia_Navale
         }
     }
 }
+
+
+
+
+
+//il codice per la schermata di titolo sta nel drive di Teo
