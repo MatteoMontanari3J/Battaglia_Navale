@@ -53,27 +53,126 @@ namespace Battaglia_Navale
             //dichiarazione ed inizializzazione delle variabili:
 
             //matrici del campo di gioco - 11 caselle perchè: 1.è più facile interragire con le coordinate da parte del giocatore 2.si usano come spazio per le lettere ad inizio codice
-            int[,] player = new int[11, 11];
-            int[,] playerHidden = new int[11, 11];
-            int[,] ia = new int[11, 11];
-            int[,] iaHidden = new int[11, 11];
+            //dichiarazione ed inizializzazione delle variabili:
 
-            
+            //matrici del campo di gioco
+            char[,] player = new char[11, 11];
+            // int[,] playerHidden = new int[10, 10];
+            char[,] ia = new char[11, 11];
+            // int[,] iaHidden = new int[10, 10];
 
             //variabili coordinate per la selezione della casella durante il gioco
             char riga = ' ';
             int colonna = 0;
 
             //variabile turno - cambia a seconda di chi è il turno
-            char turn = ' ';
-
-
-            
-
-
+            // char turn = ' ';
+            TestPlayerFieldGeneration(player); // Player field
+            Console.WriteLine("\n");
+            TestBotFieldGeneration(ia); // Bot field
 
             //fin
             Console.ReadKey();
+        }
+
+        static void TestPlayerFieldGeneration(char[,] player) // FUNZIONE DI debug field
+        {
+            int let = 65; // ascii indice della lettera 'A'
+            int numero = 49; // ascii indice di '1'
+
+            Console.WriteLine("Campo del giocatore");
+            for (int i = 0; i < player.GetLength(0); i++)
+            {
+                Console.WriteLine(); // obbligatorio perche senza questo riesce male
+                for (int j = 0; j < player.GetLength(0); j++)
+                {
+                    /* 
+                    j = riga (orizontale)
+                    i = colonna (verticale)
+                    */
+
+                    if (j == 0 && i == 0)
+                    {
+                        Console.Write(' ' + " "); // nella posizione 0,0 lasciamo vuoto
+                    }
+                    else if (j != 0 && i == 0) // generazione delle lettere
+                    {
+                        char lettera = (char)(let); // trasforma ascii indice nel carattere
+                        player[i, j] = lettera;
+                        Console.Write(player[i, j] + " "); // stampa la lettera
+                        let++; // ascii indice + 1 (trasforma nella lettera prossima)
+                    }
+                    else if (j == 0 && i != 0) // generazione dei numeri di posizione
+                    {
+                        if (i == 10) // se posizione = 10
+                        {
+                            numero = 48; // nella posizione di 10 mettiamo '0' (ascii indice di '0')
+                        }
+
+                        char num = (char)(numero); // trasforma ascii indice nel carattere
+
+                        player[i, j] = num;
+                        Console.Write(player[i, j] + " ");
+                        numero++; // ascii indice + 1 (trasforma nel numero prossimo)
+
+                    }
+                    else // genera la cella "vuota" dove si puo giocare
+                    {
+                        player[i, j] = '?';
+                        Console.Write(player[i, j] + " ");
+                    }
+                }
+            }
+        }
+
+        static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
+        {
+            int let = 65; // ascii indice della lettera 'A'
+            int numero = 49; // ascii indice di '1'
+
+            Console.WriteLine("Campo del Bot");
+            for (int i = 0; i < player.GetLength(0); i++)
+            {
+                Console.WriteLine(); // obbligatorio perche senza questo riesce male
+                for (int j = 0; j < player.GetLength(0); j++)
+                {
+                    /* 
+                    j = riga (orizontale)
+                    i = colonna (verticale)
+                    */
+
+                    if (j == 0 && i == 0)
+                    {
+                        Console.Write(' ' + " "); // nella posizione 0,0 lasciamo vuoto
+                    }
+                    else if (j != 0 && i == 0) // generazione delle lettere
+                    {
+                        char lettera = (char)(let); // trasforma ascii indice nel carattere
+                        player[i, j] = lettera;
+                        Console.Write(player[i, j] + " "); // stampa la lettera
+                        let++; // ascii indice + 1 (trasforma nella lettera prossima)
+                    }
+                    else if (j == 0 && i != 0) // generazione dei numeri di posizione
+                    {
+                        if (i == 10) // se posizione = 10
+                        {
+                            numero = 48; // nella posizione di 10 mettiamo '0' (ascii indice di '0')
+                        }
+
+                        char num = (char)(numero); // trasforma ascii indice nel carattere
+
+                        player[i, j] = num;
+                        Console.Write(player[i, j] + " ");
+                        numero++; // ascii indice + 1 (trasforma nel numero prossimo)
+
+                    }
+                    else // genera la cella "vuota" dove si puo giocare
+                    {
+                        player[i, j] = '?';
+                        Console.Write(player[i, j] + " ");
+                    }
+                }
+            }
         }
     }
 }
