@@ -57,16 +57,22 @@ namespace Battaglia_Navale
 
             //matrici del campo di gioco
             char[,] player = new char[11, 11];
-            // int[,] playerHidden = new int[10, 10];
+            // int[,] playerHidden = new int[11, 11];
             char[,] ia = new char[11, 11];
-            // int[,] iaHidden = new int[10, 10];
+            // int[,] iaHidden = new int[11, 11];
 
             //variabili coordinate per la selezione della casella durante il gioco
             char riga = ' ';
             int colonna = 0;
 
-            //variabile turno - cambia a seconda di chi è il turno
-            // char turn = ' ';
+            //variabile turno - cambia a seconda di chi è il turno (true è il campo del giocatore)
+            bool turn = true;
+
+            //variabile difficoltà
+            bool difficoltà = false;
+
+
+
             TestPlayerFieldGeneration(player); // Player field
             Console.WriteLine("\n");
             TestBotFieldGeneration(ia); // Bot field
