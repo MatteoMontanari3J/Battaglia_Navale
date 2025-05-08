@@ -71,6 +71,9 @@ namespace Battaglia_Navale
             //variabile difficoltà
             bool difficoltà = false;
 
+            //variabile per i risultati di alcune funzion
+            string stato = "";
+
 
 
             TestPlayerFieldGeneration(player); // Player field
