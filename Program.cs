@@ -77,8 +77,49 @@ namespace Battaglia_Navale
             Console.WriteLine("\n");
             TestBotFieldGeneration(ia); // Bot field
 
+            SelezioneDifficoltà(difficoltà);
+            if (difficoltà)
+                Console.WriteLine("true");
+
             //fin
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// funzione che permette al giocatore di selezionare la difficoltà
+        /// </summary>
+        /// <param name="difficoltà">variabile boolean che corrisponde alla difficoltà selezionata.</param>
+        static void SelezioneDifficoltà(ref bool difficoltà)
+        {
+            //dichiarazione ed inizializzazione variabili
+            char var = ' ';
+            int i = 0;
+
+            //ciclo per selezionare la difficoltà
+            while (i == 0)
+            {
+                //assegnazione valori
+                Console.WriteLine("scegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
+                var = Convert.ToChar(Console.ReadLine());
+                //assegnazione della difficoltà selezionata
+                switch (var)
+                {
+                    case '0':
+                        difficoltà = false;
+                        i++;
+                        break;
+                    case '1':
+                        difficoltà = true;
+                        i++;
+                        break;
+                    default:
+                        Console.WriteLine("Perfavore, inserire una difficoltà esistente");
+                        break;
+                }
+
+                //pulizia console di output
+                Console.Clear();
+            }
         }
 
         static void TestPlayerFieldGeneration(char[,] player) // FUNZIONE DI debug field
@@ -131,46 +172,6 @@ namespace Battaglia_Navale
             }
         }
 
-        /// <summary>
-        /// funzione che permette al giocatore di selezionare la difficoltà
-        /// </summary>
-        /// <param name="difficoltà">variabile boolean che corrisponde alla difficoltà selezionata.</param>
-        static void SelezioneDifficoltà(ref bool difficoltà)
-        {
-            //dichiarazione ed inizializzazione variabili
-            char var = ' ';
-            int i = 0;
-
-            //ciclo per selezionare la difficoltà
-            while (i == 0)
-            {
-                //assegnazione valori
-                Console.WriteLine("scegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
-                var = Convert.ToChar(Console.ReadLine());
-                //assegnazione della difficoltà selezionata
-                switch (var)
-                {
-                    case '0':
-                        difficoltà = false;
-                        i++;
-                        break;
-                    case '1':
-                        difficoltà = true;
-                        i++;
-                        break;
-                    default:
-                        Console.WriteLine("Perfavore, inserire una difficoltà esistente");
-                        break;
-                }
-
-                //pulizia console di output
-                Console.Clear();
-            }
-        }
-
-    }
-}
-        
         static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
         {
             int let = 65; // ascii indice della lettera 'A'
