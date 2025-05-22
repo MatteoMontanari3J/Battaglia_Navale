@@ -84,6 +84,8 @@ namespace Battaglia_Navale
             if (difficoltà)
                 Console.WriteLine("true");
 
+            ShipPlacement(player, riga, colonna)
+
             //fin
             Console.ReadKey();
         }
@@ -777,14 +779,12 @@ namespace Battaglia_Navale
         static void FrecceVisive() //disegnio con il direzione
         {
             Console.WriteLine("   __     |                ");
-            Console.WriteLine("  |  |    |       |        ");
-            Console.WriteLine("  |  |    | ______         ");
+            Console.WriteLine("  |  |    |       | \      ");
+            Console.WriteLine("  |  |    | ______|  \     ");
             Console.WriteLine(" -    -   | ______   /     ");
-            Console.WriteLine("      /   |       | /      ");
+            Console.WriteLine(" \    /   |       | /      ");
             Console.WriteLine("   --  (V)|           (H)  ");
         }
-
-        
     }
 }
 
