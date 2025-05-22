@@ -76,9 +76,9 @@ namespace Battaglia_Navale
 
 
 
-            TestPlayerFieldGeneration(player); // Player field
+            FieldGeneration(player); // Player field
             Console.WriteLine("\n");
-            TestBotFieldGeneration(ia); // Bot field
+            FieldGeneration(ia); // Bot field
 
             SelezioneDifficoltà(ref difficoltà);
             if (difficoltà)
@@ -125,7 +125,7 @@ namespace Battaglia_Navale
             }
         }
 
-        static void TestPlayerFieldGeneration(char[,] player) // FUNZIONE DI debug field
+        static void FieldGeneration(char[,] player) //funzione di riempimento del campo
         {
             int let = 65; // ascii indice della lettera 'A'
             int numero = 49; // ascii indice di '1'
@@ -174,56 +174,7 @@ namespace Battaglia_Navale
                 }
             }
         }
-                                            //qui non dovrebbe essere (char [,] ia) ?
-        static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
-        {
-            int let = 65; // ascii indice della lettera 'A'
-            int numero = 49; // ascii indice di '1'
-
-            Console.WriteLine("Campo del Bot");
-            for (int i = 0; i < player.GetLength(0); i++)
-            {
-                Console.WriteLine(); // obbligatorio perche senza questo riesce male
-                for (int j = 0; j < player.GetLength(0); j++)
-                {
-                    /* 
-                    j = riga (orizontale)
-                    i = colonna (verticale)
-                    */
-
-                    if (j == 0 && i == 0)
-                    {
-                        Console.Write(' ' + " "); // nella posizione 0,0 lasciamo vuoto
-                    }
-                    else if (j != 0 && i == 0) // generazione delle lettere
-                    {
-                        char lettera = (char)(let); // trasforma ascii indice nel carattere
-                        player[i, j] = lettera;
-                        Console.Write(player[i, j] + " "); // stampa la lettera
-                        let++; // ascii indice + 1 (trasforma nella lettera prossima)
-                    }
-                    else if (j == 0 && i != 0) // generazione dei numeri di posizione
-                    {
-                        if (i == 10) // se posizione = 10
-                        {
-                            numero = 48; // nella posizione di 10 mettiamo '0' (ascii indice di '0')
-                        }
-
-                        char num = (char)(numero); // trasforma ascii indice nel carattere
-
-                        player[i, j] = num;
-                        Console.Write(player[i, j] + " ");
-                        numero++; // ascii indice + 1 (trasforma nel numero prossimo)
-
-                    }
-                    else // genera la cella "vuota" dove si puo giocare
-                    {
-                        player[i, j] = '?';
-                        Console.Write(player[i, j] + " ");
-                    }
-                }
-            }
-        }
+        
 
         static void ShipPlacement(char[,] player, int riga, char colonna)
         {
