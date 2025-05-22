@@ -174,8 +174,6 @@ namespace Battaglia_Navale
                 }
             }
         }
-
-
                                             //qui non dovrebbe essere (char [,] ia) ?
         static void TestBotFieldGeneration(char[,] player) // FUNZIONE DI debug field
         {
@@ -537,6 +535,7 @@ namespace Battaglia_Navale
                 }
             }
         }
+        
         static void FieldShow(char[,] player)
         {
             for (int i = 0; i < player.GetLength(0); i++)
@@ -548,6 +547,7 @@ namespace Battaglia_Navale
                 }
             }
         }
+        
         static void SwitchLettere(int colonna, int colonnaCoord, int riga, int i, char[,]player)
         {
             switch (colonna)
@@ -607,6 +607,7 @@ namespace Battaglia_Navale
                     break;
             }
         }
+        
         static void ControlBarriers(int riga, char colonna, int scelta, bool vert, int ship1, int ship2, int ship3, int ship4, ref bool passed)
         {
             if (scelta == 1)
@@ -760,6 +761,7 @@ namespace Battaglia_Navale
                 }
             }
         }
+        
         static bool AreaLibera(char[,] player, int riga, int colonna, int colonnaCoord, int scelta, bool vert)
         {
             switch (colonna)
@@ -820,6 +822,7 @@ namespace Battaglia_Navale
             }
             return true;
         }
+        
         static void FrecceVisive() //disegnio con il direzione
         {
             Console.WriteLine("   __     |                ");
