@@ -81,8 +81,6 @@ namespace Battaglia_Navale
             FieldGeneration(ia); // Bot field
 
             SelezioneDifficoltà(ref difficoltà);
-            if (difficoltà)
-                Console.WriteLine("true");
 
             ShipPlacement(player, riga, colonna);
 
@@ -195,25 +193,25 @@ namespace Battaglia_Navale
             for (int i = 0; i < somma; i++)
             {
                 Console.WriteLine('\n');
-                Console.WriteLine("Quantita delle barche");
-                Console.WriteLine("NAVE DA 1 QUADR " + ship1);
-                Console.WriteLine("NAVE DA 2 QUADR " + ship2);
-                Console.WriteLine("NAVE DA 3 QUADR " + ship3);
-                Console.WriteLine("NAVE DA 4 QUADR " + ship4);
+                Console.WriteLine("BARCHE DA PIAZZARE:");
+                Console.WriteLine("Navi da 1 casella: " + ship1);
+                Console.WriteLine("Navi da 2 caselle: " + ship2);
+                Console.WriteLine("Navi da 3 caselle: " + ship3);
+                Console.WriteLine("Navi da 4 caselle: " + ship4);
                 Console.WriteLine("\n");
-                Console.WriteLine("Scegli un nave di mettere");
+                Console.WriteLine("Scegli il tipo di nave da piazzare.");
                 scelta = Convert.ToInt32(Console.ReadLine());
 
                 if (scelta < 1 || scelta > 4)
                 {
                     i--;
-                    Console.WriteLine("Hai inserito un numero fuori di scelta possibile");
+                    Console.WriteLine("Il tipo di nave selezionato non esiste.");
                 }
                 else if (scelta == 1)
                 {
                     if (ship1 == 0)
                     {
-                        Console.WriteLine("I navi di questo tipo non sono rimasti piu");
+                        Console.WriteLine("Non sono rimaste navi di questo tipo.");
                         i--;
                     }
                     else
@@ -221,10 +219,10 @@ namespace Battaglia_Navale
                         passed = false; // per rinnovare il ciclo dopo prima volta
                         while (!passed)
                         {
-                            Console.WriteLine("Scegli coordinati nell campo");
-                            Console.WriteLine("Coordinata della riga:");
+                            Console.WriteLine("Scegliere le coordinate della barca.");
+                            Console.WriteLine("Coordinata della riga (numero):");
                             riga = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Coordinata della colonna");
+                            Console.WriteLine("Coordinata della colonna (lettera)");
                             colonna = char.Parse(Console.ReadLine());
 
                             ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -237,7 +235,7 @@ namespace Battaglia_Navale
                         }
                         else
                         {
-                            Console.WriteLine("La cella è gia occupata");
+                            Console.WriteLine("La casella è gia occupata");
                             continue;
                         }
                     }
@@ -246,12 +244,12 @@ namespace Battaglia_Navale
                 {
                     if (ship2 == 0)
                     {
-                        Console.WriteLine("I navi di questo tipo non sono rimasti piu");
+                        Console.WriteLine("Non sono rimaste navi di questo tipo.");
                         i--;
                     }
                     else
                     {
-                        Console.WriteLine("VOI METTERE IN MODO ORIZONTALE O VERTICALE (v/h)");
+                        Console.WriteLine("Vuoi mettere la nave in orizzontale o verticale? (v per orizzontale, h per verticale)");
                         FrecceVisive();
                         char risp = char.Parse(Console.ReadLine());
                         if (risp == 'v')
@@ -267,10 +265,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -286,7 +284,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
@@ -295,10 +293,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -314,7 +312,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
@@ -325,12 +323,12 @@ namespace Battaglia_Navale
                 {
                     if (ship3 == 0)
                     {
-                        Console.WriteLine("I navi di questo tipo non sono rimasti piu");
+                        Console.WriteLine("Non sono rimaste navi di questo tipo.");
                         i--;
                     }
                     else
                     {
-                        Console.WriteLine("VOI METTERE IN MODO ORIZONTALE O VERTICALE (v/h)");
+                        Console.WriteLine("Vuoi mettere la nave in orizzontale o verticale? (v per orizzontale, h per verticale)");
                         FrecceVisive();
                         char risp = char.Parse(Console.ReadLine());
                         if (risp == 'v')
@@ -346,10 +344,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -365,7 +363,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
@@ -374,10 +372,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -393,7 +391,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
@@ -404,12 +402,12 @@ namespace Battaglia_Navale
                 {
                     if (ship4 == 0)
                     {
-                        Console.WriteLine("I navi di questo tipo non sono rimasti piu");
+                        Console.WriteLine("Non sono rimaste navi di questo tipo.");
                         i--;
                     }
                     else
                     {
-                        Console.WriteLine("VOI METTERE IN MODO ORIZONTALE O VERTICALE (v/h)");
+                        Console.WriteLine("Vuoi mettere la nave in orizzontale o verticale? (v per orizzontale, h per verticale)");
                         FrecceVisive();
                         char risp = char.Parse(Console.ReadLine());
                         if (risp == 'v')
@@ -425,10 +423,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -444,7 +442,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
@@ -453,10 +451,10 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegli coordinati nell campo");
-                                Console.WriteLine("Coordinata della riga:");
+                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna");
+                                Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
@@ -472,7 +470,7 @@ namespace Battaglia_Navale
                             }
                             else
                             {
-                                Console.WriteLine("La cella è gia occupata");
+                                Console.WriteLine("La casella è gia occupata.");
                                 continue;
                             }
                         }
