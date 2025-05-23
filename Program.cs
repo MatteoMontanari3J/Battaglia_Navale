@@ -52,37 +52,46 @@ namespace Battaglia_Navale
 
             //dichiarazione ed inizializzazione delle variabili:
 
-            //matrici del campo di gioco - 11 caselle perchè: 1.è più facile interragire con le coordinate da parte del giocatore 2.si usano come spazio per le lettere ad inizio codice
-            //dichiarazione ed inizializzazione delle variabili:
+            //matrici del campo di gioco - 11 caselle perchè: 1.è più facile interragire con le coordinate da parte del giocatore 2.si usano come spazio per le lettere ad inizio
+            //codice dichiarazione ed inizializzazione delle variabili:
 
             //matrici del campo di gioco
             char[,] player = new char[11, 11];
-            // int[,] playerHidden = new int[11, 11];
+            int[,] playerHidden = new int[11, 11];
             char[,] ia = new char[11, 11];
-            // int[,] iaHidden = new int[11, 11];
+            int[,] iaHidden = new int[11, 11];
 
             //variabili coordinate per la selezione della casella durante il gioco
             int riga = 0;
             char colonna = ' ';
 
-            //variabile turno - cambia a seconda di chi è il turno (true è il campo del giocatore)
-            bool turn = true;
-
-            //variabile difficoltà
-            bool difficoltà = false;
-
-            //variabile per i risultati di alcune funzioni
-            string stato = "";
+            //altre variabili
+            bool turn = true;           //variabile turno - cambia a seconda di chi è il turno (true è il campo del giocatore)
+            bool difficoltà = false;    //variabile difficoltà
+            string stato = "";          //variabile per i risultati di alcune funzioni
+            bool gameRepeat = true;     //variabile per la ripetizione del gioco
+            bool gameStart = true;      //variabile che dice se la partita è appena iniziata o no. utilizzata per la selezione della difficoltà e per il posizionamento delle barche
 
 
+            //ciclo partita
+            while (gameRepeat)
+            {
+                if(gameStart)   //inizio partita
+                {
+                    FieldGeneration(player);    //riempimento dei campi di gioco, giocatore, IA e quelli nascosti
+                    FieldGeneration(ia);
+                    FieldGeneration(iaHidden);
+                    FieldGeneration(playerHidden);
 
-            FieldGeneration(player); // Player field
-            Console.WriteLine("\n");
-            FieldGeneration(ia); // Bot field
+                    SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
-            SelezioneDifficoltà(ref difficoltà);
+                    ShipPlacement(player, riga, colonna);   //posizionamento barche del giocatore
 
-            ShipPlacement(player, riga, colonna);
+                    gameStart = false;  //la sequenza di inizio partita è finita, quindi non deve essere ripetuta nel prossimo ciclo
+                }
+
+
+            }
 
             //fin
             Console.ReadKey();
@@ -127,13 +136,13 @@ namespace Battaglia_Navale
 
         static void FieldGeneration(char[,] player) // Funzione di riempimento del campo
         {
-            int let = 65; // ascii indice della lettera 'A'
-            int numero = 49; // ascii indice di '1'
+            int let = 65; // indice ascii della lettera 'A'
+            int numero = 49; // indice ascii di '1'
 
-            Console.WriteLine("Campo del giocatore");
+
             for (int i = 0; i < player.GetLength(0); i++)
             {
-                Console.WriteLine(); // obbligatorio perche senza questo riesce male
+
                 for (int j = 0; j < player.GetLength(0); j++)
                 {
                     /* 
@@ -143,33 +152,33 @@ namespace Battaglia_Navale
 
                     if (j == 0 && i == 0)
                     {
-                        Console.Write(' ' + " "); // nella posizione 0,0 lasciamo vuoto
+
                     }
                     else if (j != 0 && i == 0) // generazione delle lettere
                     {
-                        char lettera = (char)(let); // trasforma ascii indice nel carattere
+                        char lettera = (char)(let); // trasforma indice ascii nel carattere
                         player[i, j] = lettera;
-                        Console.Write(player[i, j] + " "); // stampa la lettera
-                        let++; // ascii indice + 1 (trasforma nella lettera prossima)
+
+                        let++; // ascii indice + 1 (trasforma nella prossima lettera)
                     }
-                    else if (j == 0 && i != 0) // generazione dei numeri di posizione
+                    else if (j == 0 && i != 0) // generazione dei numeri della posizione
                     {
                         if (i == 10) // se posizione = 10
                         {
-                            numero = 48; // nella posizione di 10 mettiamo '0' (ascii indice di '0')
+                            numero = 48; // nella posizione di 10 mettiamo '0' (indice ascii di '0')
                         }
 
                         char num = (char)(numero); // trasforma ascii indice nel carattere
 
                         player[i, j] = num;
-                        Console.Write(player[i, j] + " ");
-                        numero++; // ascii indice + 1 (trasforma nel numero prossimo)
+
+                        numero++; // indice ascii + 1 (trasforma nel prossimo numero)
 
                     }
-                    else // genera la cella "vuota" dove si puo giocare
+                    else // genera la cella "vuota"
                     {
                         player[i, j] = '?';
-                        Console.Write(player[i, j] + " ");
+
                     }
                 }
             }
@@ -594,7 +603,7 @@ namespace Battaglia_Navale
                     }
                     else
                     {
-                        if (!"ABCDEFGHIabcdefghi".Contains(colonna))
+                        if (!"ABCDEFGHIJabcdefghij".Contains(colonna))
                         {
                             Console.WriteLine("Hai inserito le coordinati imposibili, prova di nuovo");
                             ship2++;
@@ -776,7 +785,7 @@ namespace Battaglia_Navale
             return true;
         }
 
-        static void FrecceVisive() //disegnio con il direzione
+        static void FrecceVisive() //disegno con il direzione
         {
             Console.WriteLine("   __     |                ");
             Console.WriteLine("  |  |    |       | \\      ");
