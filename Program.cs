@@ -36,7 +36,7 @@ namespace Battaglia_Navale
                                     generare coordinate random
                             difficile
                                 -turno IA smart
-                                    [algoritmo intelligenza] ottenere coordinate
+                                    [algoritmo intelligente] ottenere coordinate
 
                         -funzione sparare il colpo e vedere se si ha beccato o mancato
 
@@ -57,21 +57,21 @@ namespace Battaglia_Navale
 
             //matrici del campo di gioco
             char[,] player = new char[11, 11];
-            int[,] playerHidden = new int[11, 11];
+            char[,] playerHidden = new char[11, 11];
             char[,] ia = new char[11, 11];
-            int[,] iaHidden = new int[11, 11];
+            char[,] iaHidden = new char[11, 11];
 
             //variabili coordinate per la selezione della casella durante il gioco
             int riga = 0;
             char colonna = ' ';
 
             //altre variabili
-            bool turn = true;           //variabile turno - cambia a seconda di chi è il turno (true è il campo del giocatore)
+            bool turn = true;           //variabile turno - cambia a seconda di chi è il turno (true è il giocatore - false è l'IA)
             bool difficoltà = false;    //variabile difficoltà
-            string stato = "";          //variabile per i risultati di alcune funzioni
             bool gameRepeat = true;     //variabile per la ripetizione del gioco
             bool gameStart = true;      //variabile che dice se la partita è appena iniziata o no. utilizzata per la selezione della difficoltà e per il posizionamento delle barche
             bool colpito = false;
+
 
             //ciclo partita
             while (gameRepeat)
@@ -80,34 +80,23 @@ namespace Battaglia_Navale
                 {
                     FieldGeneration(player);    //riempimento dei campi di gioco, giocatore, IA e quelli nascosti
                     FieldGeneration(ia);
-                    
-                    //FieldGeneration(iaHidden);
-                    //FieldGeneration(playerHidden);
+                    FieldGeneration(iaHidden);
+                    FieldGeneration(playerHidden);
 
                     SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
                     ShipPlacement(player, riga, colonna);   //posizionamento barche del giocatore
                     
-                    ShipPlacementIA(ia);
-                    
-                    FieldShow(ia);
-
-                    ProvaColpireIA(ia, ref colpito); //sparo
-
-                    while (colpito) //se sparo ero giusto, da un altra possibilita
-                    {
-                        ProvaColpireIA(ia, ref colpito);
-                    }
-                    Console.WriteLine("\n" + "Non hai colpito PC");
-                    
-                    FieldShow(ia);
-
-
+                    ShipPlacementIA(ia);    //posizionemento barche dell'IA
 
                     gameStart = false;  //la sequenza di inizio partita è finita, quindi non deve essere ripetuta nel prossimo ciclo
                 }
 
+                
 
+                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn);  //turno del giocatore
+
+                //placeholder funzione turno IA (bisognerà anche mettere l'IF per associare la difficoltà al turno dell'IA random o intelligente)
             }
 
             //fin
@@ -169,7 +158,7 @@ namespace Battaglia_Navale
 
                     if (j == 0 && i == 0)
                     {
-
+                        player[j, i] = ' ';
                     }
                     else if (j != 0 && i == 0) // generazione delle lettere
                     {
@@ -201,9 +190,6 @@ namespace Battaglia_Navale
             }
         }
 
-
-        /* ---------- funzioni dedite al piazzamento delle barche: ---------- */
-
         static void ShipPlacement(char[,] player, int riga, char colonna)
         {
             int ship1 = 4; //quantita dei navi (ship"1" - 1 -> lunghezza)
@@ -218,6 +204,9 @@ namespace Battaglia_Navale
 
             for (int i = 0; i < somma; i++)
             {
+                Console.Clear();
+                FieldShow(player);      //si mostra il campo del giocatore al giocatore
+
                 Console.WriteLine('\n');
                 Console.WriteLine("BARCHE DA PIAZZARE:");
                 Console.WriteLine("Navi da 1 casella: " + ship1);
@@ -245,7 +234,7 @@ namespace Battaglia_Navale
                         passed = false; // per rinnovare il ciclo dopo prima volta
                         while (!passed)
                         {
-                            Console.WriteLine("Scegliere le coordinate della barca.");
+                            Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                             Console.WriteLine("Coordinata della riga (numero):");
                             riga = int.Parse(Console.ReadLine());
                             Console.WriteLine("Coordinata della colonna (lettera)");
@@ -257,7 +246,7 @@ namespace Battaglia_Navale
                         {
                             // transformazione della lettera nel numero
                             SwitchLettere(colonna, colonnaCoord, riga, i, player);
-                            FieldShow(player);// mostra il risult
+                            //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio. almeno credo anche in questo caso
                         }
                         else
                         {
@@ -291,7 +280,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -319,7 +308,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -342,7 +331,7 @@ namespace Battaglia_Navale
                                 continue;
                             }
                         }
-                        FieldShow(player);//mostra il risult
+                        //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
                 else if (scelta == 3)
@@ -370,7 +359,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -398,7 +387,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -421,7 +410,7 @@ namespace Battaglia_Navale
                                 continue;
                             }
                         }
-                        FieldShow(player);//mostra il risult
+                        //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
                 else if (scelta == 4)
@@ -449,7 +438,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -477,7 +466,7 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca.");
+                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
                                 Console.WriteLine("Coordinata della riga (numero):");
                                 riga = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Coordinata della colonna (lettera)");
@@ -500,10 +489,10 @@ namespace Battaglia_Navale
                                 continue;
                             }
                         }
-                        FieldShow(player);//mostra il risult
+                        //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
-                // diminuire i navi
+                // diminuire le navi
 
                 switch (scelta)
                 {
@@ -740,6 +729,7 @@ namespace Battaglia_Navale
                 }
             }
         }
+
         static void ShipPlacementIA(char[,] ia)
         {
             Random rnd = new Random();
@@ -775,6 +765,7 @@ namespace Battaglia_Navale
                 }
             }
         }
+
         static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             for (int i = 0; i < size; i++)
@@ -887,33 +878,33 @@ namespace Battaglia_Navale
                         return false;
                     if (riga != 10)
                     {
-                        if (player[(riga + 1) + i, colonnaCoord + i] == '█')
+                        if (player[(riga + 1), colonnaCoord + i] == '█')
                             return false;
-                        if (player[(riga + 1) + i, (colonnaCoord - 1) + i] == '█')
+                        if (player[(riga + 1), (colonnaCoord - 1) + i] == '█')
                             return false;
                         if (colonnaCoord != 10)
                         {
-                            if (player[(riga + 1) + i, (colonnaCoord + 1) + i] == '█')
+                            if (player[(riga + 1), (colonnaCoord + 1) + i] == '█')
                                 return false;
                         }
                     }
                     if (riga != 1)
                     {
-                        if (player[(riga - 1) + i, colonnaCoord + i] == '█')
+                        if (player[(riga - 1), colonnaCoord + i] == '█')
                             return false;
-                        if (player[(riga - 1) + i, (colonnaCoord - 1) + i] == '█')
+                        if (player[(riga - 1), (colonnaCoord - 1) + i] == '█')
                             return false;
                         if (colonnaCoord != 10)
                         {
-                            if (player[(riga - 1) + i, (colonnaCoord + 1) + i] == '█')
+                            if (player[(riga - 1), (colonnaCoord + 1) + i] == '█')
                                 return false;
                         }
                     }
-                    if (player[riga + i, (colonnaCoord - 1) + i] == '█')
+                    if (player[riga, (colonnaCoord - 1) + i] == '█')
                         return false;
                     if (colonnaCoord != 10)
                     {
-                        if (player[riga + i, (colonnaCoord + 1) + i] == '█')
+                        if (player[riga, (colonnaCoord + 1) + i] == '█')
                             return false;
                     }
 
@@ -922,7 +913,7 @@ namespace Battaglia_Navale
             return true;
         }
 
-        static void ProvaColpireIA(char[,] ia, ref bool colpito)
+        static void ProvaColpireIA(char[,] ia, char[,] iaHidden, ref bool colpito)
         {
             Console.WriteLine("\n" + "Inserisci le coordinate per un sparo");
             Console.WriteLine("\n" + "RIGA");
@@ -976,7 +967,8 @@ namespace Battaglia_Navale
 
             if (ia[riga, colonnaCoord] == '█')
             {
-                ia[riga, colonnaCoord] = '*';
+                ia[riga, colonnaCoord] = '*';                 //il campo dell'IA viene aggiornato
+                iaHidden[riga, colonnaCoord] = '*';           //il campo dell'IA nascosto viene aggiornato
                 Console.WriteLine("\n" + "Hai colpito");
                 colpito = true;
             }
@@ -994,6 +986,27 @@ namespace Battaglia_Navale
             Console.WriteLine(" -    -   | ______   /     ");
             Console.WriteLine(" \\    /   |       | /      ");
             Console.WriteLine("   --  (V)|           (H)  ");
+        }
+
+        static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn)
+        {
+            turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
+
+            FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
+            Console.WriteLine("\n");
+            FieldShow(iaHidden);
+
+            ProvaColpireIA(ia, iaHidden, ref colpito); //sparo
+
+            while (colpito) //se si ha colpito una nave, allora fai colpire ancora
+            {
+                ProvaColpireIA(ia, iaHidden, ref colpito);
+
+                //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
+            }
+            Console.WriteLine("\n" + "Hai mancato.");
+
+            FieldShow(ia);
         }
     }
 }
