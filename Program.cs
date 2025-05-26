@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,21 +71,38 @@ namespace Battaglia_Navale
             string stato = "";          //variabile per i risultati di alcune funzioni
             bool gameRepeat = true;     //variabile per la ripetizione del gioco
             bool gameStart = true;      //variabile che dice se la partita è appena iniziata o no. utilizzata per la selezione della difficoltà e per il posizionamento delle barche
-
+            bool colpito = false;
 
             //ciclo partita
             while (gameRepeat)
             {
-                if(gameStart)   //inizio partita
+                if (gameStart)   //inizio partita
                 {
                     FieldGeneration(player);    //riempimento dei campi di gioco, giocatore, IA e quelli nascosti
                     FieldGeneration(ia);
-                    FieldGeneration(iaHidden);
-                    FieldGeneration(playerHidden);
+                    
+                    //FieldGeneration(iaHidden);
+                    //FieldGeneration(playerHidden);
 
                     SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
                     ShipPlacement(player, riga, colonna);   //posizionamento barche del giocatore
+                    
+                    ShipPlacementIA(ia);
+                    
+                    FieldShow(ia);
+
+                    ProvaColpireIA(ia, ref colpito); //sparo
+
+                    while (colpito) //se sparo ero giusto, da un altra possibilita
+                    {
+                        ProvaColpireIA(ia, ref colpito);
+                    }
+                    Console.WriteLine("\n" + "Non hai colpito PC");
+                    
+                    FieldShow(ia);
+
+
 
                     gameStart = false;  //la sequenza di inizio partita è finita, quindi non deve essere ripetuta nel prossimo ciclo
                 }
@@ -723,6 +740,63 @@ namespace Battaglia_Navale
                 }
             }
         }
+        static void ShipPlacementIA(char[,] ia)
+        {
+            Random rnd = new Random();
+            int[] sizes = { 1, 2, 3, 4 };
+            int[] quantities = { 4, 3, 2, 1 };
+
+            for (int type = 0; type < sizes.Length; type++)
+            {
+                int size = sizes[type];
+                int count = quantities[type];
+
+                for (int i = 0; i < count; i++)
+                {
+                    bool placed = false;
+
+                    while (!placed)
+                    {
+                        bool vertical = rnd.Next(2) == 0;
+                        int row = rnd.Next(1, vertical ? 12 - size : 11);
+                        int col = rnd.Next(1, vertical ? 11 : 12 - size);
+
+                        if (AreaLibera(ia, row, col, size, vertical))
+                        {
+                            for (int j = 0; j < size; j++)
+                            {
+                                int r = vertical ? row + j : row;
+                                int c = vertical ? col : col + j;
+                                ia[r, c] = '█';
+                            }
+                            placed = true;
+                        }
+                    }
+                }
+            }
+        }
+        static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                int r = vertical ? row + i : row;
+                int c = vertical ? col : col + i;
+
+                if (ia[r, c] == '█') return false;
+
+                for (int dr = -1; dr <= 1; dr++)
+                {
+                    for (int dc = -1; dc <= 1; dc++)
+                    {
+                        int nr = r + dr;
+                        int nc = c + dc;
+                        if (nr >= 1 && nr <= 10 && nc >= 1 && nc <= 10 && ia[nr, nc] == '█')
+                            return false;
+                    }
+                }
+            }
+            return true;
+        }
 
         static bool AreaLibera(char[,] player, int riga, int colonna, int colonnaCoord, int scelta, bool vert)
         {
@@ -775,14 +849,141 @@ namespace Battaglia_Navale
                 {
                     if (player[riga + i, colonnaCoord] == '█')
                         return false;
+                    if (riga != 10)
+                    {
+                        if (player[(riga + 1) + i, colonnaCoord] == '█')
+                            return false;
+                        if (player[(riga + 1) + i, (colonnaCoord - 1)] == '█')
+                            return false;
+                        if (colonnaCoord != 10)
+                        {
+                            if (player[(riga + 1) + i, (colonnaCoord + 1)] == '█')
+                                return false;
+                        }
+                    }
+                    if (riga != 1)
+                    {
+                        if (player[(riga - 1) + i, colonnaCoord] == '█')
+                            return false;
+                        if (player[(riga - 1) + i, (colonnaCoord - 1)] == '█')
+                            return false;
+                        if (colonnaCoord != 10)
+                        {
+                            if (player[(riga - 1) + i, (colonnaCoord + 1)] == '█')
+                                return false;
+                        }
+                    }
+                    if (player[riga + i, (colonnaCoord - 1)] == '█')
+                        return false;
+                    if (colonnaCoord != 10)
+                    {
+                        if (player[riga + i, (colonnaCoord + 1)] == '█')
+                            return false;
+                    }
                 }
                 else
                 {
                     if (player[riga, colonnaCoord + i] == '█')
                         return false;
+                    if (riga != 10)
+                    {
+                        if (player[(riga + 1) + i, colonnaCoord + i] == '█')
+                            return false;
+                        if (player[(riga + 1) + i, (colonnaCoord - 1) + i] == '█')
+                            return false;
+                        if (colonnaCoord != 10)
+                        {
+                            if (player[(riga + 1) + i, (colonnaCoord + 1) + i] == '█')
+                                return false;
+                        }
+                    }
+                    if (riga != 1)
+                    {
+                        if (player[(riga - 1) + i, colonnaCoord + i] == '█')
+                            return false;
+                        if (player[(riga - 1) + i, (colonnaCoord - 1) + i] == '█')
+                            return false;
+                        if (colonnaCoord != 10)
+                        {
+                            if (player[(riga - 1) + i, (colonnaCoord + 1) + i] == '█')
+                                return false;
+                        }
+                    }
+                    if (player[riga + i, (colonnaCoord - 1) + i] == '█')
+                        return false;
+                    if (colonnaCoord != 10)
+                    {
+                        if (player[riga + i, (colonnaCoord + 1) + i] == '█')
+                            return false;
+                    }
+
                 }
             }
             return true;
+        }
+
+        static void ProvaColpireIA(char[,] ia, ref bool colpito)
+        {
+            Console.WriteLine("\n" + "Inserisci le coordinate per un sparo");
+            Console.WriteLine("\n" + "RIGA");
+            int riga = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\n" + "COLONNA, LETTERA");
+            char colonna = Convert.ToChar(Console.ReadLine());
+            int colonnaCoord = 0;
+            switch (colonna) //non troppo smart (copypasta)
+            {
+                case 'A':
+                case 'a':
+                    colonnaCoord = 1;
+                    break;
+                case 'B':
+                case 'b':
+                    colonnaCoord = 2;
+                    break;
+                case 'C':
+                case 'c':
+                    colonnaCoord = 3;
+                    break;
+                case 'D':
+                case 'd':
+                    colonnaCoord = 4;
+                    break;
+                case 'E':
+                case 'e':
+                    colonnaCoord = 5;
+                    break;
+                case 'F':
+                case 'f':
+                    colonnaCoord = 6;
+                    break;
+                case 'G':
+                case 'g':
+                    colonnaCoord = 7;
+                    break;
+                case 'H':
+                case 'h':
+                    colonnaCoord = 8;
+                    break;
+                case 'I':
+                case 'i':
+                    colonnaCoord = 9;
+                    break;
+                case 'J':
+                case 'j':
+                    colonnaCoord = 10;
+                    break;
+            }
+
+            if (ia[riga, colonnaCoord] == '█')
+            {
+                ia[riga, colonnaCoord] = '*';
+                Console.WriteLine("\n" + "Hai colpito");
+                colpito = true;
+            }
+            else
+            {
+                colpito = false;
+            }
         }
 
         static void FrecceVisive() //disegno con il direzione
