@@ -167,6 +167,10 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// funzione di riempimento delle matrici di gioco
+        /// </summary>
+        /// <param name="player"> matrice da riempire </param>
         static void FieldGeneration(char[,] player) // Funzione di riempimento del campo
         {
             int let = 65; // indice ascii della lettera 'A'
@@ -217,6 +221,12 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// funzione di piazzamento delle barche del giocatore
+        /// </summary>
+        /// <param name="player"> matrice in cui piazzare le barche </param>
+        /// <param name="riga"></param>
+        /// <param name="colonna"></param>
         static void ShipPlacement(char[,] player, int riga, char colonna)
         {
             int ship1 = 4; //quantita dei navi (ship"1" - 1 -> lunghezza)
@@ -258,7 +268,7 @@ namespace Battaglia_Navale
                     }
                     else
                     {
-                        passed = false; // per rinnovare il ciclo dopo prima volta
+                        passed = false; // per rinnovare il ciclo dopo la prima volta
                         while (!passed)
                         {
                             Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
@@ -531,6 +541,10 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// funzione che stampa una matrice come campo di gioco
+        /// </summary>
+        /// <param name="player"> matrice da stampare </param>
         static void FieldShow(char[,] player)
         {
             for (int i = 0; i < player.GetLength(0); i++)
@@ -543,6 +557,14 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="colonna"></param>
+        /// <param name="colonnaCoord"></param>
+        /// <param name="riga"></param>
+        /// <param name="i"></param>
+        /// <param name="player"></param>
         static void SwitchLettere(int colonna, int colonnaCoord, int riga, int i, char[,] player)
         {
             switch (colonna)
@@ -603,6 +625,18 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="riga"></param>
+        /// <param name="colonna"></param>
+        /// <param name="scelta"></param>
+        /// <param name="vert"></param>
+        /// <param name="ship1"></param>
+        /// <param name="ship2"></param>
+        /// <param name="ship3"></param>
+        /// <param name="ship4"></param>
+        /// <param name="passed"></param>
         static void ControlBarriers(int riga, char colonna, int scelta, bool vert, int ship1, int ship2, int ship3, int ship4, ref bool passed)
         {
             if (scelta == 1)
@@ -757,6 +791,10 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// funzione in cui si piazzano le barche in posizioni e versi casuali sulla matrice passata. usata per il riempimento del campo dell'ia
+        /// </summary>
+        /// <param name="ia"> matrice su cui vengono piazzate le barche </param>
         static void ShipPlacementIA(char[,] ia)
         {
             Random rnd = new Random();
@@ -779,13 +817,13 @@ namespace Battaglia_Navale
 
                         if (verticale)
                         {
-                            righe = rnd.Next(1, 12 - size); 
-                            colonne = rnd.Next(1, 11);        
+                            righe = rnd.Next(1, 12 - size);
+                            colonne = rnd.Next(1, 11);
                         }
                         else
                         {
-                            righe = rnd.Next(1, 11);        
-                            colonne = rnd.Next(1, 12 - size); 
+                            righe = rnd.Next(1, 11);
+                            colonne = rnd.Next(1, 12 - size);
                         }
 
                         if (AreaLibera(ia, righe, colonne, size, verticale))
@@ -814,10 +852,11 @@ namespace Battaglia_Navale
             }
         }
 
-		static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
+        /* credo che questa funzione vada cancellata
+        static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             for (int i = 0; i < size; i++)
-            { 
+            {
                 int righe, colonne;
                 if (vertical)
                 {
@@ -846,6 +885,18 @@ namespace Battaglia_Navale
             return true;
         }
 
+        */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="riga"></param>
+        /// <param name="colonna"></param>
+        /// <param name="colonnaCoord"></param>
+        /// <param name="scelta"></param>
+        /// <param name="vert"></param>
+        /// <returns></returns>
         static bool AreaLibera(char[,] player, int riga, int colonna, int colonnaCoord, int scelta, bool vert)
         {
             switch (colonna)
@@ -1062,6 +1113,17 @@ namespace Battaglia_Navale
             return true;
         }
 
+        /// <summary>
+        /// funzione con cui, dati i campi, di chi è il turno e le coordinate dello sparo, controlla se si può sparare nella casella e spara nel campo dell'avversario
+        /// </summary>
+        /// <param name="ia"> campo dell'ia </param>
+        /// <param name="iaHidden"> campo dell'ia nascosto </param>
+        /// <param name="player"> campo del giocatore </param>
+        /// <param name="playerHidden"> campo del giocatore nascosto </param>
+        /// <param name="colpito"> variabile utile come ritornoi per alcune funzioni (suppongo) </param>
+        /// <param name="riga"> riga in cui sparare </param>
+        /// <param name="colonna"> colonna in cui sparare </param>
+        /// <param name="turn"> variabile con cui si determina chi sta sparando. false=ia, true=giocatore </param>
         static void Sparo(char[,] ia, char[,] iaHidden, char[,] player, char[,] playerHidden, ref bool colpito, ref int riga, ref char colonna, ref bool turn)
         {
             int colonnaCoord = 0;                               //cambiato per far si che le coordinate arrivino dalla funzione del turno del giocatore/IA
@@ -1143,6 +1205,9 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// variabile che serve per stampare delle frecce con cui si mostra la direzione in cui si vuole piazzare la barca
+        /// </summary>
         static void FrecceVisive() //disegno con il direzione
         {
             Console.WriteLine("   __     |                ");
@@ -1153,6 +1218,17 @@ namespace Battaglia_Navale
             Console.WriteLine("   --  (V)|           (H)  ");
         }
 
+        /// <summary>
+        /// funzione del turno del giocatore
+        /// </summary>
+        /// <param name="ia"> campo dell'ia </param>
+        /// <param name="player"> campo dell'ia nascosto </param>
+        /// <param name="iaHidden"> campo del giocatore </param>
+        /// <param name="playerHidden"> campo del giocatore nascosto </param>
+        /// <param name="colpito"> variabile utile per ritorni di alcune funzioni </param>
+        /// <param name="turn"> variabile turno. qui viene settata come true </param>
+        /// <param name="riga"> riga in cui colpire </param>
+        /// <param name="colonna"> colonna in cui colpire </param>
         static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna)
         {
             turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
@@ -1190,6 +1266,17 @@ namespace Battaglia_Navale
             Console.WriteLine("\n" + "Hai mancato.");
         }
 
+        /// <summary>
+        /// turno dell'ia random
+        /// </summary>
+        /// <param name="ia"> campo dell'ia </param>
+        /// <param name="player"> campo dell'ia nascosto </param>
+        /// <param name="iaHidden"> campo del giocatore </param>
+        /// <param name="playerHidden"> campo del giocatore nascosto </param>
+        /// <param name="colpito"> variabile utile per ritorni di alcune funzioni </param>
+        /// <param name="turn"> variabile turno. qui viene settata come true </param>
+        /// <param name="riga"> riga in cui colpire </param>
+        /// <param name="colonna"> colonna in cui colpire </param>
         static void TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna)
         {
             turn = false;    //il turno è del giocatore, quindi la variabile va settata a true
