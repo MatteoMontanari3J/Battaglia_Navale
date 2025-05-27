@@ -1157,13 +1157,13 @@ namespace Battaglia_Navale
         {
             turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
 
-            Console.WriteLine("Il tuo campo");
+            Console.WriteLine("Il tuo campo:");
             FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-            Console.WriteLine("\nIl campo del computer");
+            Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer:");
             FieldShow(iaHidden);
 
             //raccolta coordinate in cui colpire
-            Console.WriteLine("\n\n\nInserire la riga in cui sparare (numero)");
+            Console.WriteLine("\n\n\n\n\n\nInserire la riga in cui sparare (numero)");
             riga = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
             colonna = Convert.ToChar(Console.ReadLine());
@@ -1172,14 +1172,15 @@ namespace Battaglia_Navale
 
             while (colpito) //se si ha colpito una nave, allora fai colpire ancora
             {
+                Console.WriteLine("Il tuo campo:");
                 FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-                Console.WriteLine("\n");
+                Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer:");
                 FieldShow(iaHidden);
 
                 //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
-                Console.WriteLine("\nInserire la riga in cui colpire (numero)");
+                Console.WriteLine("\n\n\n\n\nInserire la riga in cui sparare (numero)");
                 riga = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("\nInserire la colonna in cui colpire (lettera)");
+                Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
                 colonna = Convert.ToChar(Console.ReadLine());
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn);
