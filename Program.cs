@@ -64,13 +64,21 @@ namespace Battaglia_Navale
             //variabili coordinate per la selezione della casella durante il gioco
             int riga = 0;
             char colonna = ' ';
-
-            //altre variabili
+            //altre variabili dentro il ciclo
             bool turn = true;           //variabile turno - cambia a seconda di chi è il turno (true è il giocatore - false è l'IA)
             bool difficoltà = false;    //variabile difficoltà
+            bool colpito = false;
+
+            //altre variabili fuori dal ciclo
             bool gameRepeat = true;     //variabile per la ripetizione del gioco
             bool gameStart = true;      //variabile che dice se la partita è appena iniziata o no. utilizzata per la selezione della difficoltà e per il posizionamento delle barche
-            bool colpito = false;
+
+
+            //punti vita delle barche per il colpito e affondato
+            int[,] boatsPlayer = new int[10, 4];                      //10 barche totali ciascuno
+            int[,] boatsIa = new int[10, 4];
+            //ordine = coordriga, coordcolonna, vert/orizz, lunghezza.
+            //la prima coordinata serve per l'identificativo barca
 
 
 
@@ -87,6 +95,12 @@ namespace Battaglia_Navale
                     FieldGeneration(ia);
                     FieldGeneration(iaHidden);
                     FieldGeneration(playerHidden);
+
+                    riga = 0;
+                    colonna = ' ';
+                    difficoltà = false;
+                    colpito = false;
+                    turn = true;
 
                     SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
@@ -107,20 +121,15 @@ namespace Battaglia_Navale
             */
 
 
-
-
             FieldGeneration(player);
             FieldGeneration(ia);
             FieldGeneration(iaHidden);
             FieldGeneration(playerHidden);
 
 
-            ShipPlacementIA(player);
-            ShipPlacementIA(ia);
+            ShipPlacement(player, riga, colonna, boatsPlayer);
 
-            TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna);
-
-
+            DebugBarca(boatsPlayer);
 
 
 
@@ -227,7 +236,7 @@ namespace Battaglia_Navale
         /// <param name="player"> matrice in cui piazzare le barche </param>
         /// <param name="riga"></param>
         /// <param name="colonna"></param>
-        static void ShipPlacement(char[,] player, int riga, char colonna)
+        static void ShipPlacement(char[,] player, int riga, char colonna, int[,] boats)
         {
             int ship1 = 4; //quantita dei navi (ship"1" - 1 -> lunghezza)
             int ship2 = 3;
@@ -241,6 +250,7 @@ namespace Battaglia_Navale
 
             for (int i = 0; i < somma; i++)
             {
+
                 Console.Clear();
                 FieldShow(player);      //si mostra il campo del giocatore al giocatore
 
@@ -254,6 +264,8 @@ namespace Battaglia_Navale
                 Console.WriteLine("Scegli il tipo di nave da piazzare. Se provi a mettere una barca sopra l'altra, non succederà niente e la barca non verrà piazzata.");
                 scelta = Convert.ToInt32(Console.ReadLine());
 
+                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                 if (scelta < 1 || scelta > 4)
                 {
                     i--;
@@ -261,9 +273,11 @@ namespace Battaglia_Navale
                 }
                 else if (scelta == 1)
                 {
+                    boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
+
                     if (ship1 == 0)
                     {
-                        Console.WriteLine("Non sono rimaste navi di questo tipo.");
+                        Console.WriteLine("Non sono rimaste navi di questo tipo.");             //forse il bug del negativo sta qui in giro
                         i--;
                     }
                     else
@@ -276,6 +290,8 @@ namespace Battaglia_Navale
                             riga = int.Parse(Console.ReadLine());
                             Console.WriteLine("Coordinata della colonna (lettera)");
                             colonna = char.Parse(Console.ReadLine());
+
+                            boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
 
                             ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                         }
@@ -294,6 +310,8 @@ namespace Battaglia_Navale
                 }
                 else if (scelta == 2)
                 {
+                    boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
+
                     if (ship2 == 0)
                     {
                         Console.WriteLine("Non sono rimaste navi di questo tipo.");
@@ -323,6 +341,8 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
@@ -351,6 +371,8 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
@@ -373,6 +395,8 @@ namespace Battaglia_Navale
                 }
                 else if (scelta == 3)
                 {
+                    boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
+
                     if (ship3 == 0)
                     {
                         Console.WriteLine("Non sono rimaste navi di questo tipo.");
@@ -402,6 +426,8 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
@@ -430,6 +456,8 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
@@ -452,6 +480,8 @@ namespace Battaglia_Navale
                 }
                 else if (scelta == 4)
                 {
+                    boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
+
                     if (ship4 == 0)
                     {
                         Console.WriteLine("Non sono rimaste navi di questo tipo.");
@@ -481,6 +511,8 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
@@ -509,8 +541,11 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
+                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
+
                             if (AreaLibera(player, riga, colonna, colonnaCoord, scelta, vert))
                             {
                                 for (int a = 4; a > 0; a--)
@@ -538,6 +573,15 @@ namespace Battaglia_Navale
                     case 3: ship3--; break;
                     case 4: ship4--; break;
                 }
+
+
+
+                //memorizzare la nave inserita
+                boats[i, 0] = riga;             //memorizzare la riga
+                if (vert)                       //memorizzare 0 o 1 se è verticale o orizzontale
+                    boats[i, 2] = 1;
+                else
+                    boats[i, 2] = 0;
             }
         }
 
@@ -850,7 +894,7 @@ namespace Battaglia_Navale
                     }
                 }
             }
-        }
+        }       //da modificare per ottenere le informazioni di una barca quando vengono generate
 
         //non so se dovrei cancellare questa funzione, dato che se la cancello, l'altra funzione "arealibera" darà un errore relativo ai parametri
         static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
@@ -1206,7 +1250,7 @@ namespace Battaglia_Navale
         /// <summary>
         /// variabile che serve per stampare delle frecce con cui si mostra la direzione in cui si vuole piazzare la barca
         /// </summary>
-        static void FrecceVisive() //disegno con il direzione
+        static void FrecceVisive() //disegno con le direzioni
         {
             Console.WriteLine("   __     |                ");
             Console.WriteLine("  |  |    |       | \\      ");
@@ -1258,8 +1302,6 @@ namespace Battaglia_Navale
                 colonna = Convert.ToChar(Console.ReadLine());
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn);
-
-                //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
             }
             Console.WriteLine("\n" + "Hai mancato.");
         }
@@ -1287,6 +1329,12 @@ namespace Battaglia_Navale
 
             Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
 
+            //il giocatore vede il proprio campo dopo il colpo
+            Console.Clear();
+            FieldShow(player);
+            Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
+            Console.ReadKey();
+
             while (colpito) //se si ha colpito una nave, allora fai colpire ancora
             {
                 //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
@@ -1295,15 +1343,76 @@ namespace Battaglia_Navale
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
 
-                //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
+                //il giocatore vede il proprio campo dopo il colpo
+                Console.Clear();
+                FieldShow(player);
+                Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
+                Console.ReadKey();
             }
-            Console.WriteLine("\n" + "Hai mancato.");
+
+            //potremmo rimpiazzare questi doppioni con un do-while
+        }
+
+
+        /// <summary>
+        /// schermata di titolo
+        /// </summary>
+        static void SchermataIniziale()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
+            Console.WriteLine("░▒▓███████▓▒░ ░▒▓██████▓▒░▒▓████████▓▒░▒▓████████▓▒░▒▓█▓▒░      ░▒▓████████▓▒░░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓███████▓▒░ ");
+            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
+            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
+            Console.WriteLine("░▒▓███████▓▒░░▒▓████████▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓██████▓▒░  ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░  ");
+            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
+            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
+            Console.WriteLine("░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓████████▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓███████▓▒░  ");
+
+            // Set the console text color to yellow
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            // Print the message with additional newlines for a bigger visual effect
+            Console.WriteLine("                                                     *************************************************  ");
+            Console.WriteLine("                                                          PREMI UN TASTO QUALSIASI PER CONTINUARE          ");
+            Console.WriteLine("                                                     *************************************************  ");
+            Console.WriteLine("\n\n\n");
+
+            // Wait for any key press
+            Console.ResetColor(); // Reset the console color to default
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        /// <summary>
+        /// funzione per visualizzare tutti i dati di identificazione delle barche di un giocatore (giocatore o ia)
+        /// </summary>
+        /// <param name="boats"> barche da visualizzare </param>
+        static void DebugBarca(int[,] boats)
+        {
+            Console.WriteLine("  RIGA | COLONNA | VERTICALE/ORIZZONTALE |   LUNGHEZZA");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[0, 0] + "  |   " + Convert.ToChar(boats[0, 1]) + "      |        " + boats[0, 2] + "       |  " + boats[0, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[1, 0] + "  |   " + Convert.ToChar(boats[1, 1]) + "      |        " + boats[1, 2] + "       |" + boats[1, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[2, 0] + "  |   " + Convert.ToChar(boats[2, 1]) + "      |        " + boats[2, 2] + "       |" + boats[2, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[3, 0] + "  |   " + Convert.ToChar(boats[3, 1]) + "      |        " + boats[3, 2] + "       |" + boats[3, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[4, 0] + "  |   " + Convert.ToChar(boats[4, 1]) + "      |        " + boats[4, 2] + "       |" + boats[4, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[5, 0] + "  |   " + Convert.ToChar(boats[5, 1]) + "      |        " + boats[5, 2] + "       |" + boats[5, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[6, 0] + "  |   " + Convert.ToChar(boats[6, 1]) + "      |        " + boats[6, 2] + "       |" + boats[6, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[7, 0] + "  |   " + Convert.ToChar(boats[7, 1]) + "      |        " + boats[7, 2] + "       |" + boats[7, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[8, 0] + "  |   " + Convert.ToChar(boats[8, 1]) + "      |        " + boats[8, 2] + "       |" + boats[8, 3]);
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("|  " + boats[9, 0] + "  |   " + Convert.ToChar(boats[9, 1]) + "      |        " + boats[9, 2] + "       |" + boats[9, 3]);
+
+            Console.ReadKey();
         }
     }
 }
-
-
-
-
-
-//il codice per la schermata di titolo sta nel drive di Teo
