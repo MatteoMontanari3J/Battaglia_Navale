@@ -1159,7 +1159,7 @@ namespace Battaglia_Navale
 
             Console.WriteLine("Il tuo campo:");
             FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-            Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer:");
+            Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer (nascosto):");
             FieldShow(iaHidden);
 
             //raccolta coordinate in cui colpire
