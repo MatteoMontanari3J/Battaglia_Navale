@@ -852,7 +852,7 @@ namespace Battaglia_Navale
             }
         }
 
-        /* credo che questa funzione vada cancellata
+        //non so se dovrei cancellare questa funzione, dato che se la cancello, l'altra funzione "arealibera" darà un errore relativo ai parametri
         static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             for (int i = 0; i < size; i++)
@@ -884,8 +884,6 @@ namespace Battaglia_Navale
             }
             return true;
         }
-
-        */
 
         /// <summary>
         /// 
