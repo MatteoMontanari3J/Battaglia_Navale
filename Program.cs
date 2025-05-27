@@ -73,8 +73,10 @@ namespace Battaglia_Navale
             bool colpito = false;
 
 
+
             //placeholder: schermata di titolo
 
+            /*       ciclo partita messo come commento per il debugging
 
             //ciclo partita
             while (gameRepeat)
@@ -101,6 +103,28 @@ namespace Battaglia_Navale
 
                 //placeholder funzione turno IA (bisognerà anche mettere l'IF per associare la difficoltà al turno dell'IA random o intelligente)
             }
+
+            */
+
+
+
+
+            FieldGeneration(player);
+            FieldGeneration(ia);
+            FieldGeneration(iaHidden);
+            FieldGeneration(playerHidden);
+
+
+            ShipPlacementIA(player);
+            ShipPlacementIA(ia);
+
+            TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna);
+
+
+
+
+
+
 
             //fin
             Console.ReadKey();
@@ -1008,7 +1032,7 @@ namespace Battaglia_Navale
             return true;
         }
 
-        static void Sparo(char[,] ia, char[,] iaHidden, ref bool colpito, ref int riga, ref char colonna)
+        static void Sparo(char[,] ia, char[,] iaHidden, char[,] player, char[,] playerHidden, ref bool colpito, ref int riga, ref char colonna, ref bool turn)
         {
             int colonnaCoord = 0;                               //cambiato per far si che le coordinate arrivino dalla funzione del turno del giocatore/IA
             switch (colonna) //non troppo smart (copypasta)
@@ -1055,16 +1079,37 @@ namespace Battaglia_Navale
                     break;
             }
 
-            if (ia[riga, colonnaCoord] == '█')
+            if (turn)   //se turn è true allora è turno del giocatore
             {
-                ia[riga, colonnaCoord] = '*';                 //il campo dell'IA viene aggiornato
-                iaHidden[riga, colonnaCoord] = '*';           //il campo dell'IA nascosto viene aggiornato
-                Console.WriteLine("\n" + "Hai colpito");
-                colpito = true;
+                if (ia[riga, colonnaCoord] == '█')
+                {
+                    ia[riga, colonnaCoord] = 'X';                 //il campo dell'IA viene aggiornato
+                    iaHidden[riga, colonnaCoord] = 'X';           //il campo dell'IA nascosto viene aggiornato
+                    Console.WriteLine("\n" + "Hai colpito");
+                    colpito = true;
+                }
+                else
+                {
+                    ia[riga, colonnaCoord] = 'O';
+                    iaHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
+                    colpito = false;
+                }
             }
-            else
+            else    //se non è true allora è turno dell'IA
             {
-                colpito = false;
+                if (player[riga, colonnaCoord] == '█')
+                {
+                    player[riga, colonnaCoord] = 'X';                 //il campo del giocatore viene aggiornato
+                    playerHidden[riga, colonnaCoord] = 'X';           //il campo del giocatore nascosto viene aggiornato
+                    Console.WriteLine("Sei stato colpito");
+                    colpito = true;
+                }
+                else
+                {
+                    player[riga, colonnaCoord] = 'O';
+                    playerHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
+                    colpito = false;
+                }
             }
         }
 
@@ -1082,33 +1127,61 @@ namespace Battaglia_Navale
         {
             turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
 
+            Console.WriteLine("Il tuo campo");
             FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-            Console.WriteLine("\n");
+            Console.WriteLine("\nIl campo del computer");
             FieldShow(iaHidden);
 
             //raccolta coordinate in cui colpire
-            Console.WriteLine("\nInserire la riga in cui sparare (numero)");
+            Console.WriteLine("\n\n\nInserire la riga in cui sparare (numero)");
             riga = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
             colonna = Convert.ToChar(Console.ReadLine());
 
-            Sparo(ia, iaHidden, ref colpito, ref riga, ref colonna); //sparo
+            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
 
             while (colpito) //se si ha colpito una nave, allora fai colpire ancora
             {
+                FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
+                Console.WriteLine("\n");
+                FieldShow(iaHidden);
+
                 //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
                 Console.WriteLine("\nInserire la riga in cui colpire (numero)");
                 riga = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("\nInserire la colonna in cui colpire (lettera)");
                 colonna = Convert.ToChar(Console.ReadLine());
 
-                Sparo(ia, iaHidden, ref colpito, ref riga, ref colonna);
+                Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn);
 
                 //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
             }
             Console.WriteLine("\n" + "Hai mancato.");
+        }
 
-            FieldShow(ia);
+        static void TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna)
+        {
+            turn = false;    //il turno è del giocatore, quindi la variabile va settata a true
+
+            Random random = new Random(DateTime.Now.Millisecond);
+
+            //raccolta coordinate in cui colpire
+            riga = random.Next(1, 11);
+            colonna = Convert.ToChar(random.Next(97, 107));
+
+            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
+
+            while (colpito) //se si ha colpito una nave, allora fai colpire ancora
+            {
+                //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
+                riga = random.Next(1, 11);
+                colonna = Convert.ToChar(random.Next(97, 107));
+
+                Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
+
+                //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
+            }
+            Console.WriteLine("\n" + "Hai mancato.");
         }
     }
 }
