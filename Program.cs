@@ -73,6 +73,9 @@ namespace Battaglia_Navale
             bool colpito = false;
 
 
+            //placeholder: schermata di titolo
+
+
             //ciclo partita
             while (gameRepeat)
             {
@@ -86,15 +89,15 @@ namespace Battaglia_Navale
                     SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
                     ShipPlacement(player, riga, colonna);   //posizionamento barche del giocatore
-                    
+
                     ShipPlacementIA(ia);    //posizionemento barche dell'IA
 
                     gameStart = false;  //la sequenza di inizio partita è finita, quindi non deve essere ripetuta nel prossimo ciclo
                 }
 
-                
 
-                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn);  //turno del giocatore
+
+                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna);  //turno del giocatore
 
                 //placeholder funzione turno IA (bisognerà anche mettere l'IF per associare la difficoltà al turno dell'IA random o intelligente)
             }
@@ -214,7 +217,7 @@ namespace Battaglia_Navale
                 Console.WriteLine("Navi da 3 caselle: " + ship3);
                 Console.WriteLine("Navi da 4 caselle: " + ship4);
                 Console.WriteLine("\n");
-                Console.WriteLine("Scegli il tipo di nave da piazzare.");
+                Console.WriteLine("Scegli il tipo di nave da piazzare. Se provi a mettere una barca sopra l'altra, non succederà niente e la barca non verrà piazzata.");
                 scelta = Convert.ToInt32(Console.ReadLine());
 
                 if (scelta < 1 || scelta > 4)
@@ -884,8 +887,40 @@ namespace Battaglia_Navale
                             return false;
                         if (colonnaCoord != 10)
                         {
-                            if (player[(riga + 1), (colonnaCoord + 1) + i] == '█')
-                                return false;
+                            if (colonnaCoord != 10)
+                            {
+                                if (scelta == 2)
+                                {
+                                    if (colonnaCoord == 9)
+                                    {
+                                        if (player[(riga + 1), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else if (scelta == 3)
+                                {
+                                    if (colonnaCoord == 8)
+                                    {
+                                        if (player[(riga + 1), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else if (scelta == 4)
+                                {
+                                    if (colonnaCoord == 7)
+                                    {
+                                        if (player[(riga + 1), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (player[(riga + 1), (colonnaCoord + 1) + i] == '█')
+                                        return false;
+                                }
+
+                            }
+
                         }
                     }
                     if (riga != 1)
@@ -896,16 +931,76 @@ namespace Battaglia_Navale
                             return false;
                         if (colonnaCoord != 10)
                         {
-                            if (player[(riga - 1), (colonnaCoord + 1) + i] == '█')
-                                return false;
+                            if (colonnaCoord != 10)
+                            {
+                                if (scelta == 2)
+                                {
+                                    if (colonnaCoord == 9)
+                                    {
+                                        if (player[(riga), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else if (scelta == 3)
+                                {
+                                    if (colonnaCoord == 8)
+                                    {
+                                        if (player[(riga), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else if (scelta == 4)
+                                {
+                                    if (colonnaCoord == 7)
+                                    {
+                                        if (player[(riga), (colonnaCoord) + i] == '█')
+                                            return false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (player[(riga), (colonnaCoord + 1) + i] == '█')
+                                        return false;
+                                }
+
+                            }
+
                         }
                     }
                     if (player[riga, (colonnaCoord - 1) + i] == '█')
                         return false;
                     if (colonnaCoord != 10)
                     {
-                        if (player[riga, (colonnaCoord + 1) + i] == '█')
-                            return false;
+                        if (scelta == 2)
+                        {
+                            if (colonnaCoord == 9)
+                            {
+                                if (player[(riga), (colonnaCoord) + i] == '█')
+                                    return false;
+                            }
+                        }
+                        else if (scelta == 3)
+                        {
+                            if (colonnaCoord == 8)
+                            {
+                                if (player[(riga), (colonnaCoord) + i] == '█')
+                                    return false;
+                            }
+                        }
+                        else if (scelta == 4)
+                        {
+                            if (colonnaCoord == 7)
+                            {
+                                if (player[(riga), (colonnaCoord) + i] == '█')
+                                    return false;
+                            }
+                        }
+                        else
+                        {
+                            if (player[(riga), (colonnaCoord + 1) + i] == '█')
+                                return false;
+                        }
+
                     }
 
                 }
@@ -913,14 +1008,9 @@ namespace Battaglia_Navale
             return true;
         }
 
-        static void ProvaColpireIA(char[,] ia, char[,] iaHidden, ref bool colpito)
+        static void Sparo(char[,] ia, char[,] iaHidden, ref bool colpito, ref int riga, ref char colonna)
         {
-            Console.WriteLine("\n" + "Inserisci le coordinate per un sparo");
-            Console.WriteLine("\n" + "RIGA");
-            int riga = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("\n" + "COLONNA, LETTERA");
-            char colonna = Convert.ToChar(Console.ReadLine());
-            int colonnaCoord = 0;
+            int colonnaCoord = 0;                               //cambiato per far si che le coordinate arrivino dalla funzione del turno del giocatore/IA
             switch (colonna) //non troppo smart (copypasta)
             {
                 case 'A':
@@ -988,7 +1078,7 @@ namespace Battaglia_Navale
             Console.WriteLine("   --  (V)|           (H)  ");
         }
 
-        static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn)
+        static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna)
         {
             turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
 
@@ -996,11 +1086,23 @@ namespace Battaglia_Navale
             Console.WriteLine("\n");
             FieldShow(iaHidden);
 
-            ProvaColpireIA(ia, iaHidden, ref colpito); //sparo
+            //raccolta coordinate in cui colpire
+            Console.WriteLine("\nInserire la riga in cui sparare (numero)");
+            riga = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
+            colonna = Convert.ToChar(Console.ReadLine());
+
+            Sparo(ia, iaHidden, ref colpito, ref riga, ref colonna); //sparo
 
             while (colpito) //se si ha colpito una nave, allora fai colpire ancora
             {
-                ProvaColpireIA(ia, iaHidden, ref colpito);
+                //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
+                Console.WriteLine("\nInserire la riga in cui colpire (numero)");
+                riga = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("\nInserire la colonna in cui colpire (lettera)");
+                colonna = Convert.ToChar(Console.ReadLine());
+
+                Sparo(ia, iaHidden, ref colpito, ref riga, ref colonna);
 
                 //ATTENZIONE: qui va fatto il controllo di fine partita (per Jaco quando dovrà lavorare)
             }
