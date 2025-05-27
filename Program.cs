@@ -761,29 +761,50 @@ namespace Battaglia_Navale
         {
             Random rnd = new Random();
             int[] sizes = { 1, 2, 3, 4 };
-            int[] quantities = { 4, 3, 2, 1 };
+            int[] quantita = { 4, 3, 2, 1 };
 
-            for (int type = 0; type < sizes.Length; type++)
+            for (int tipo = 0; tipo < sizes.Length; tipo++)
             {
-                int size = sizes[type];
-                int count = quantities[type];
+                int size = sizes[tipo];
+                int contato = quantita[tipo];
 
-                for (int i = 0; i < count; i++)
+                for (int i = 0; i < contato; i++)
                 {
                     bool placed = false;
 
                     while (!placed)
                     {
-                        bool vertical = rnd.Next(2) == 0;
-                        int row = rnd.Next(1, vertical ? 12 - size : 11);
-                        int col = rnd.Next(1, vertical ? 11 : 12 - size);
+                        bool verticale = rnd.Next(2) == 0;
+                        int righe, colonne;
 
-                        if (AreaLibera(ia, row, col, size, vertical))
+                        if (verticale)
+                        {
+                            righe = rnd.Next(1, 12 - size); 
+                            colonne = rnd.Next(1, 11);        
+                        }
+                        else
+                        {
+                            righe = rnd.Next(1, 11);        
+                            colonne = rnd.Next(1, 12 - size); 
+                        }
+
+                        if (AreaLibera(ia, righe, colonne, size, verticale))
                         {
                             for (int j = 0; j < size; j++)
                             {
-                                int r = vertical ? row + j : row;
-                                int c = vertical ? col : col + j;
+                                int r, c;
+
+                                if (verticale)
+                                {
+                                    r = righe + j;
+                                    c = colonne;
+                                }
+                                else
+                                {
+                                    r = righe;
+                                    c = colonne + j;
+                                }
+
                                 ia[r, c] = '█';
                             }
                             placed = true;
@@ -793,22 +814,31 @@ namespace Battaglia_Navale
             }
         }
 
-        static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
+		static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             for (int i = 0; i < size; i++)
-            {
-                int r = vertical ? row + i : row;
-                int c = vertical ? col : col + i;
+            { 
+                int righe, colonne;
+                if (vertical)
+                {
+                    righe = row + i;
+                    colonne = col;
+                }
+                else
+                {
+                    righe = row;
+                    colonne = col + i;
+                }
 
-                if (ia[r, c] == '█') return false;
+                if (ia[righe, colonne] == '█') return false;
 
                 for (int dr = -1; dr <= 1; dr++)
                 {
                     for (int dc = -1; dc <= 1; dc++)
                     {
-                        int nr = r + dr;
-                        int nc = c + dc;
-                        if (nr >= 1 && nr <= 10 && nc >= 1 && nc <= 10 && ia[nr, nc] == '█')
+                        int numRighe = righe + dr;
+                        int numColonne = colonne + dc;
+                        if (numRighe >= 1 && numRighe <= 10 && numColonne >= 1 && numColonne <= 10 && ia[numRighe, numColonne] == '█')
                             return false;
                     }
                 }
