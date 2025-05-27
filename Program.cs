@@ -1149,7 +1149,7 @@ namespace Battaglia_Navale
             Console.WriteLine("  |  |    |       | \\      ");
             Console.WriteLine("  |  |    | ______|  \\     ");
             Console.WriteLine(" -    -   | ______   /     ");
-            Console.WriteLine(" \\    /   |       | /      ");
+            Console.WriteLine(" \\    /  |       | /      ");
             Console.WriteLine("   --  (V)|           (H)  ");
         }
 
