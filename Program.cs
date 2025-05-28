@@ -77,63 +77,67 @@ namespace Battaglia_Navale
             //punti vita delle barche per il colpito e affondato
             int[,] boatsPlayer = new int[10, 4];                      //10 barche totali ciascuno
             int[,] boatsIa = new int[10, 4];
-            //ordine = coordriga, coordcolonna, vert/orizz, lunghezza.
+            //l'ordine è: coordriga, coordcolonna, vert/orizz, lunghezza.
             //la prima coordinata serve per l'identificativo barca
 
+            bool end = false;   //variabile per determinare se la partita è finita o no
 
+            //-----------FINE INIZIALIZZAZIONE-----------
 
-            //placeholder: schermata di titolo
-
-            /*       ciclo partita messo come commento per il debugging
+            SchermataIniziale();    //visualizzazione della schermata di titolo
 
             //ciclo partita
             while (gameRepeat)
             {
                 if (gameStart)   //inizio partita
                 {
+                    turn = true;        //re-inizializzazione in caso di una nuova partita
+                    gameStart = true;
+                    riga = 0;
+                    colonna = ' ';
+                    colpito = false;
+                    end = false;
+
+                    for (int i = 0; i < 10; i++)    //setta a 0 tutte le righe
+                    {
+                        SetZero(boatsPlayer, i);
+                        SetZero(boatsIa, i);
+                    }
+
                     FieldGeneration(player);    //riempimento dei campi di gioco, giocatore, IA e quelli nascosti
                     FieldGeneration(ia);
                     FieldGeneration(iaHidden);
                     FieldGeneration(playerHidden);
 
-                    riga = 0;
-                    colonna = ' ';
-                    difficoltà = false;
-                    colpito = false;
-                    turn = true;
+                    //fine re-inizializzazione
 
                     SelezioneDifficoltà(ref difficoltà);    //selezione della difficoltà
 
-                    ShipPlacement(player, riga, colonna);   //posizionamento barche del giocatore
+                    ShipPlacement(player, riga, colonna, boatsPlayer);   //posizionamento barche del giocatore
 
-                    ShipPlacementIA(ia);    //posizionemento barche dell'IA
+                    ShipPlacementIA(ia, boatsIa);    //posizionemento barche dell'IA
 
                     gameStart = false;  //la sequenza di inizio partita è finita, quindi non deve essere ripetuta nel prossimo ciclo
                 }
 
+                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsIa);  //turno del giocatore
 
+                end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);   //controlla se la parita è finita
 
-                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna);  //turno del giocatore
+                if (!end)    //se la partita non è finita
+                {
+                    if (difficoltà) //se la difficoltà è alta
+                    {
+                        TurnoIaSmart(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer);
+                    }
+                    else    //se la difficoltà è bassa
+                    {
+                        TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer);
+                    }
 
-                //placeholder funzione turno IA (bisognerà anche mettere l'IF per associare la difficoltà al turno dell'IA random o intelligente)
+                    VerificaFine(player, ia, ref gameRepeat, ref gameStart);    //verifica di nuovo se la partita è finita
+                }
             }
-
-            */
-
-
-            FieldGeneration(player);
-            FieldGeneration(ia);
-            FieldGeneration(iaHidden);
-            FieldGeneration(playerHidden);
-
-
-            ShipPlacement(player, riga, colonna, boatsPlayer);
-
-            DebugBarca(boatsPlayer);
-
-
-
-
 
             //fin
             Console.WriteLine("\n\n\n\n\nPremere qualsiasi tasto per uscire dal programma...");
@@ -1177,24 +1181,7 @@ namespace Battaglia_Navale
 
             bool drowned = false;   //variabile usata per segnalare un colpito ed affondato (ci si mette il ritorno della funzione)
 
-            Console.WriteLine("Il tuo campo:");
-            FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-            Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer (nascosto):");
-            FieldShow(iaHidden);
-
-            //raccolta coordinate in cui colpire
-            Console.WriteLine("\n\n\n\n\n\nInserire la riga in cui sparare (numero)");
-            riga = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
-            colonna = Convert.ToChar(Console.ReadLine());
-
-            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
-
-            drowned = ColpitoAffondato(boatsIa, ia);    //se si è verificato un colpito ed affondato nuovo
-            if (drowned)
-                Console.WriteLine("COLPITO ED AFFONDATO!!!\n\n");
-
-            while (colpito) //se si ha colpito una nave, allora fai colpire ancora
+            do
             {
                 Console.WriteLine("Il tuo campo:");
                 FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
@@ -1208,7 +1195,13 @@ namespace Battaglia_Navale
                 colonna = Convert.ToChar(Console.ReadLine());
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn);
+
+                drowned = ColpitoAffondato(boatsIa, ia);    //se si è verificato un colpito ed affondato nuovo
+                if (drowned)
+                    Console.WriteLine("\n\nCOLPITO ED AFFONDATO!!!\n\n");
             }
+            while (colpito); //se si ha colpito una nave, allora fai colpire ancora
+
             Console.WriteLine("\n" + "Hai mancato.");
         }
 
@@ -1223,7 +1216,7 @@ namespace Battaglia_Navale
         /// <param name="turn"> variabile turno. qui viene settata come true </param>
         /// <param name="riga"> riga in cui colpire </param>
         /// <param name="colonna"> colonna in cui colpire </param>
-        static void TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna)
+        static void TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna, int[,] boatsPlayer)
         {
             turn = false;    //il turno è del giocatore, quindi la variabile va settata a true
 
@@ -1233,15 +1226,9 @@ namespace Battaglia_Navale
             riga = random.Next(1, 11);
             colonna = Convert.ToChar(random.Next(97, 107));
 
-            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
+            bool drowned = false;
 
-            //il giocatore vede il proprio campo dopo il colpo
-            Console.Clear();
-            FieldShow(player);
-            Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
-            Console.ReadKey();
-
-            while (colpito) //se si ha colpito una nave, allora fai colpire ancora
+            do
             {
                 //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
                 riga = random.Next(1, 11);
@@ -1249,14 +1236,17 @@ namespace Battaglia_Navale
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
 
+                drowned = ColpitoAffondato(boatsPlayer, player);    //se si è verificato un colpito ed affondato nuovo
+                if (drowned)
+                    Console.WriteLine("\n\nCOLPITO ED AFFONDATO!!!\n\n");
+
                 //il giocatore vede il proprio campo dopo il colpo
                 Console.Clear();
                 FieldShow(player);
                 Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
                 Console.ReadKey();
             }
-
-            //potremmo rimpiazzare questi doppioni con un do-while
+            while (colpito); //se si ha colpito una nave, allora fai colpire ancora
         }
 
         /// <summary>
@@ -1266,21 +1256,23 @@ namespace Battaglia_Navale
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
 
-            Console.WriteLine("░▒▓███████▓▒░ ░▒▓██████▓▒░▒▓████████▓▒░▒▓████████▓▒░▒▓█▓▒░      ░▒▓████████▓▒░░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓███████▓▒░ ");
-            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
-            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
-            Console.WriteLine("░▒▓███████▓▒░░▒▓████████▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓██████▓▒░  ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░  ");
-            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
-            Console.WriteLine("░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
-            Console.WriteLine("░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓████████▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓███████▓▒░  ");
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+            Console.WriteLine("                                     ░▒▓███████▓▒░ ░▒▓██████▓▒░▒▓████████▓▒░▒▓████████▓▒░▒▓█▓▒░      ░▒▓████████▓▒░░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓███████▓▒░ ");
+            Console.WriteLine("                                     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
+            Console.WriteLine("                                     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ");
+            Console.WriteLine("                                     ░▒▓███████▓▒░░▒▓████████▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓██████▓▒░  ░▒▓██████▓▒░░▒▓████████▓▒░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░  ");
+            Console.WriteLine("                                     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
+            Console.WriteLine("                                     ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░ ");
+            Console.WriteLine("                                     ░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░ ░▒▓█▓▒░      ░▒▓█▓▒░   ░▒▓████████▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░▒▓█▓▒░      ░▒▓███████▓▒░  ");
 
             // Set the console text color to yellow
             Console.ForegroundColor = ConsoleColor.Yellow;
 
             // Print the message with additional newlines for a bigger visual effect
-            Console.WriteLine("                                                     *************************************************  ");
-            Console.WriteLine("                                                          PREMI UN TASTO QUALSIASI PER CONTINUARE          ");
-            Console.WriteLine("                                                     *************************************************  ");
+            Console.WriteLine("\n\n\n                                                                                 *************************************************  ");
+            Console.WriteLine("                                                                                     PREMI UN TASTO QUALSIASI PER CONTINUARE          ");
+            Console.WriteLine("                                                                                 *************************************************  ");
             Console.WriteLine("\n\n\n");
 
             // Wait for any key press
@@ -1501,7 +1493,7 @@ namespace Battaglia_Navale
             // "HUNT": spara random finché non trova una nave che non sia da 1
             while (!nave_trovata)
             {
-                TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna);
+                TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer);
 
                 int colonna_num = 0;
                 switch (char.ToUpper(colonna))
@@ -1697,7 +1689,7 @@ namespace Battaglia_Navale
         /// <param name="plr"> campo del giocatore </param>
         /// <param name="ia"> campo dell'ia </param>
         /// <param name="gameRepeat"> variabile che nel main determina l'avvio di una nuova partita </param>
-        static void VerificaFine(char[,] plr, char[,] ia, ref bool gameRepeat)
+        static bool VerificaFine(char[,] plr, char[,] ia, ref bool gameRepeat, ref bool gameStart)
         {
             char simboloVerifica = '█';
             bool playerBarche = false;
@@ -1724,12 +1716,16 @@ namespace Battaglia_Navale
             // Determinazione
             if (!playerBarche)
             {
-                gameRepeat = ChiusuraPartita(true);  // IA vince
+                gameRepeat = ChiusuraPartita(true, ref gameStart);  // IA vince
+                return true;    //partita finita
             }
             else if (!iaBarche)
             {
-                gameRepeat = ChiusuraPartita(false); // Giocatore vince
+                gameRepeat = ChiusuraPartita(false, ref gameStart); // Giocatore vince
+                return true;    //partita finita
             }
+
+            return false;   //la partita non è finita
         }
 
         /// <summary>
@@ -1737,9 +1733,8 @@ namespace Battaglia_Navale
         /// </summary>
         /// <param name="status"> variabile: false=giocatorevince true=giocatoreperde</param>
         /// <returns> se si deve avviare un'altra partita o no </returns>
-        static bool ChiusuraPartita(bool status)
+        static bool ChiusuraPartita(bool status, ref bool gameStart)
         {
-            bool chiusa = false;
             char risp = ' ';
 
             if (!status)
@@ -1757,6 +1752,7 @@ namespace Battaglia_Navale
 
             if (risp == 'Y' || risp == 'y')
             {
+                gameStart = true;   //digli di rifare la sequenza di inizio gioco dove verrà anche rifatta la re-inizializzazione delle variabili
                 return true;        //vuole fare un'altra partita
             }
             else
