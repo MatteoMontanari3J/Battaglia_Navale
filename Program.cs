@@ -1403,25 +1403,25 @@ namespace Battaglia_Navale
         {
             Console.WriteLine("  RIGA | COLONNA | VERTICALE/ORIZZONTALE |   LUNGHEZZA");
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[0, 0] + "  |   " + Convert.ToChar(boats[0, 1]) + "      |        " + boats[0, 2] + "       |  " + boats[0, 3]);
+            Console.WriteLine("|  " + boats[0, 0] + "  |   " + boats[0, 1] + "      |        " + boats[0, 2] + "       |  " + boats[0, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[1, 0] + "  |   " + Convert.ToChar(boats[1, 1]) + "      |        " + boats[1, 2] + "       |" + boats[1, 3]);
+            Console.WriteLine("|  " + boats[1, 0] + "  |   " + boats[1, 1] + "      |        " + boats[1, 2] + "       |" + boats[1, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[2, 0] + "  |   " + Convert.ToChar(boats[2, 1]) + "      |        " + boats[2, 2] + "       |" + boats[2, 3]);
+            Console.WriteLine("|  " + boats[2, 0] + "  |   " + boats[2, 1] + "      |        " + boats[2, 2] + "       |" + boats[2, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[3, 0] + "  |   " + Convert.ToChar(boats[3, 1]) + "      |        " + boats[3, 2] + "       |" + boats[3, 3]);
+            Console.WriteLine("|  " + boats[3, 0] + "  |   " + boats[3, 1] + "      |        " + boats[3, 2] + "       |" + boats[3, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[4, 0] + "  |   " + Convert.ToChar(boats[4, 1]) + "      |        " + boats[4, 2] + "       |" + boats[4, 3]);
+            Console.WriteLine("|  " + boats[4, 0] + "  |   " + boats[4, 1] + "      |        " + boats[4, 2] + "       |" + boats[4, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[5, 0] + "  |   " + Convert.ToChar(boats[5, 1]) + "      |        " + boats[5, 2] + "       |" + boats[5, 3]);
+            Console.WriteLine("|  " + boats[5, 0] + "  |   " + boats[5, 1] + "      |        " + boats[5, 2] + "       |" + boats[5, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[6, 0] + "  |   " + Convert.ToChar(boats[6, 1]) + "      |        " + boats[6, 2] + "       |" + boats[6, 3]);
+            Console.WriteLine("|  " + boats[6, 0] + "  |   " + boats[6, 1] + "      |        " + boats[6, 2] + "       |" + boats[6, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[7, 0] + "  |   " + Convert.ToChar(boats[7, 1]) + "      |        " + boats[7, 2] + "       |" + boats[7, 3]);
+            Console.WriteLine("|  " + boats[7, 0] + "  |   " + boats[7, 1]) + "      |        " + boats[7, 2] + "       |" + boats[7, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[8, 0] + "  |   " + Convert.ToChar(boats[8, 1]) + "      |        " + boats[8, 2] + "       |" + boats[8, 3]);
+            Console.WriteLine("|  " + boats[8, 0] + "  |   " + boats[8, 1] + "      |        " + boats[8, 2] + "       |" + boats[8, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[9, 0] + "  |   " + Convert.ToChar(boats[9, 1]) + "      |        " + boats[9, 2] + "       |" + boats[9, 3]);
+            Console.WriteLine("|  " + boats[9, 0] + "  |   " + boats[9, 1] + "      |        " + boats[9, 2] + "       |" + boats[9, 3]);
 
             Console.ReadKey();
         }
