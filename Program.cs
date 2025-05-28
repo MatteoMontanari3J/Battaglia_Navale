@@ -271,7 +271,7 @@ namespace Battaglia_Navale
                     i--;
                     Console.WriteLine("Il tipo di nave selezionato non esiste.");
                 }
-                else if (scelta == 1)
+                else if (scelta == 1 && ship1 != 0)
                 {
                     boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
 
@@ -291,7 +291,7 @@ namespace Battaglia_Navale
                             Console.WriteLine("Coordinata della colonna (lettera)");
                             colonna = char.Parse(Console.ReadLine());
 
-                            boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                            //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                             ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                         }
@@ -308,7 +308,7 @@ namespace Battaglia_Navale
                         }
                     }
                 }
-                else if (scelta == 2)
+                else if (scelta == 2 && ship2 != 0)
                 {
                     boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
 
@@ -341,7 +341,7 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
-                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                                //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
@@ -371,7 +371,7 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
-                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                                //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
@@ -393,7 +393,7 @@ namespace Battaglia_Navale
                         //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
-                else if (scelta == 3)
+                else if (scelta == 3 && ship3 != 0)
                 {
                     boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
 
@@ -426,7 +426,7 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
-                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                                //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
@@ -456,7 +456,7 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
-                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                                //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
@@ -478,7 +478,7 @@ namespace Battaglia_Navale
                         //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
-                else if (scelta == 4)
+                else if (scelta == 4 && ship4 != 0)
                 {
                     boats[i, 3] = scelta;   //MEMORIZZAZIONE LUNGHEZZA
 
@@ -541,7 +541,7 @@ namespace Battaglia_Navale
                                 Console.WriteLine("Coordinata della colonna (lettera)");
                                 colonna = char.Parse(Console.ReadLine());
 
-                                boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
+                                //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
                                 ControlBarriers(riga, colonna, scelta, vert, ship1, ship2, ship3, ship4, ref passed);
                             }
@@ -564,20 +564,31 @@ namespace Battaglia_Navale
                         //FieldShow(player); non è necessario mostrare il risultato alla fine quando si può farlo all'inizio
                     }
                 }
+                else // nel caso se i navi di un tipo non sono rimaste
+                {
+                    Console.WriteLine("I navi di questo tipo non rimaste piu");
+                    i--;
+                }
+
                 // diminuire le navi
 
-                switch (scelta)
+                if (scelta == 1 && ship1 != 0 || scelta == 2 && ship2 != 0 || scelta == 3 && ship3 != 0 || scelta == 4 && ship4 != 0) // verifica se la nave era disponibile
                 {
-                    case 1: ship1--; break;
-                    case 2: ship2--; break;
-                    case 3: ship3--; break;
-                    case 4: ship4--; break;
+                    switch (scelta)
+                    {
+                        case 1: ship1--; break;
+                        case 2: ship2--; break;
+                        case 3: ship3--; break;
+                        case 4: ship4--; break;
+                    }
                 }
+
 
 
 
                 //memorizzare la nave inserita
                 boats[i, 0] = riga;             //memorizzare la riga
+                boats[i, 1] = colonnaCoord;          //memorizzare la colonna in formato numerico non corrispondente all'ascii
                 if (vert)                       //memorizzare 0 o 1 se è verticale o orizzontale
                     boats[i, 2] = 1;
                 else
