@@ -850,7 +850,7 @@ namespace Battaglia_Navale
         /// funzione in cui si piazzano le barche in posizioni e versi casuali sulla matrice passata. usata per il riempimento del campo dell'ia
         /// </summary>
         /// <param name="ia"> matrice su cui vengono piazzate le barche </param>
-        static void ShipPlacementIA(char[,] ia)
+        static void ShipPlacementIA(char[,] ia, int[s] boats)
         {
             Random rnd = new Random();
             int[] sizes = { 1, 2, 3, 4 };
