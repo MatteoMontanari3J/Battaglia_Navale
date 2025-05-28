@@ -158,26 +158,36 @@ namespace Battaglia_Navale
             while (i == 0)
             {
                 //assegnazione valori
-                Console.WriteLine("\n\nScegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
-                var = Convert.ToChar(Console.ReadLine());
-                //assegnazione della difficoltà selezionata
-                switch (var)
+                try
                 {
-                    case '0':
-                        difficoltà = false;
-                        i++;
-                        break;
-                    case '1':
-                        difficoltà = true;
-                        i++;
-                        break;
-                    default:
-                        Console.WriteLine("Perfavore, inserire una difficoltà esistente");
-                        break;
-                }
+                    Console.WriteLine("\n\nScegliere la difficoltà:\nPremere 0 per difficoltà facile\nPremere 1 per difficoltà difficile.");
+                    var = Convert.ToChar(Console.ReadLine());
+                    //assegnazione della difficoltà selezionata
+                    switch (var)
+                    {
+                        case '0':
+                            difficoltà = false;
+                            i++;
+                            break;
+                        case '1':
+                            difficoltà = true;
+                            i++;
+                            break;
+                        default:
+                            Console.WriteLine("Perfavore, inserire una difficoltà esistente");
+                            Console.ReadKey();
+                            break;
+                    }
 
-                //pulizia console di output
-                Console.Clear();
+                    //pulizia console di output
+                    Console.Clear();
+                }
+                catch
+                {
+                    Console.WriteLine("Inserire un valore valido.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
             }
         }
 
@@ -860,6 +870,7 @@ namespace Battaglia_Navale
             Random rnd = new Random();
             int[] sizes = { 1, 2, 3, 4 };
             int[] quantita = { 4, 3, 2, 1 };
+            int n = 0;
 
             for (int tipo = 0; tipo < sizes.Length; tipo++)
             {
@@ -872,7 +883,7 @@ namespace Battaglia_Navale
 
                     while (!placed)
                     {
-                        bool verticale = rnd.Next(2) == 0;
+                        bool verticale = rnd.Next(2) == 1;
                         int righe, colonne;
 
                         if (verticale)
@@ -885,6 +896,7 @@ namespace Battaglia_Navale
                             righe = rnd.Next(1, 11);
                             colonne = rnd.Next(1, 12 - size);
                         }
+
 
                         if (AreaLibera(ia, righe, colonne, size, verticale))
                         {
@@ -906,13 +918,23 @@ namespace Battaglia_Navale
                                 ia[r, c] = '█';
                             }
                             placed = true;
+
+                            boats[n, 0] = righe;        //raccoglimento dati una volta che sono stati fatti
+                            boats[n, 1] = colonne;
+                            boats[n, 3] = size;
+
+                            if (verticale)
+                                boats[n, 2] = 1;
+                            else
+                                boats[n, 2] = 0;
+
+                            n++;
                         }
                     }
                 }
             }
-        }       //da modificare per ottenere le informazioni di una barca quando vengono generate
+        }
 
-        //non so se dovrei cancellare questa funzione, dato che se la cancello, l'altra funzione "arealibera" darà un errore relativo ai parametri
         static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             if (!vertical && col + size <= 10)
