@@ -1364,7 +1364,6 @@ namespace Battaglia_Navale
             //potremmo rimpiazzare questi doppioni con un do-while
         }
 
-
         /// <summary>
         /// schermata di titolo
         /// </summary>
@@ -1425,5 +1424,96 @@ namespace Battaglia_Navale
 
             Console.ReadKey();
         }
+
+        /// <summary>
+        /// FUNZIONE PER CONTROLLARE CHE SIA AVVENUTO UN COLPITO E AFFONDATO
+        /// </summary>
+        /// <param name="boats"> informazioni delle barche del giocatore a cui appartiene il campo da analizzare </param>
+        /// <param name="player"> il campo da analizzare </param>
+        /// <returns> true=colpitoeaffondato, false=niente </returns>
+        static bool ColpitoAffondato(int[,] boats, int[,] player)
+        {
+            //ciclo per controllare le barche una ad una - le barche sono obbligatoriamente 10, quindi 10 cicli
+            for (int j = 0; j < 10; j++)
+            {
+                //-----------------------------------------------------------------------------------------------------------------------
+                //se la barca da analizzare è lunga 1 ( il quarto valore di boats, ovvero boats[i, 3], è obbligatoriamente la lunghezza )
+                //-----------------------------------------------------------------------------------------------------------------------
+                if (boats[j, 3] == 1)
+                {
+                    //se nelle coordinate di quella barca c'è una X (quindi la barca è distrutta), e se quel pezzo di matrice non è stato resettato
+                    if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
+                        (boats[j, 0] != 0) &&
+                        (boats[j, 1] != 0) &&       // boats[j,0] è la riga  -  boats[j,1] è il valore della colonna,
+                        (boats[j, 2] != 0) &&
+                        (boats[j, 3] != 0))
+                    {
+                        SetZero(boats, j);  //setta la riga a 0 così questa condizione non viene vista
+                        return true;        //comunica che è avvenuto in colpito e affondato
+                    }
+                }
+                //-----------------------------------------------------------------------------------------------------------------------
+                //se la barca da analizzare è lunga 2
+                //-----------------------------------------------------------------------------------------------------------------------
+                else if (boats[j, 3] == 2)
+                {
+                    //se la barca è verticale - boats[j,2] memorizza 0 se la barca è orizzontale e 1 se è verticale
+                    if (boats[j, 2] == 1)
+                    {
+                        //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della riga
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&       // boats[j,0] è la riga  -  boats[j,1] è il valore della colonna,
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
+                        {
+                            SetZero(boats, j);
+                            return true;
+                        }
+                        else //orizzontale
+                        {
+                            //+1 all'altro
+                        }
+                    }
+                }
+
+
+
+
+
+            }
+
+
+
+            //in boats dovremo memorizzare il valore diretto numerico e non il valore che corrisponde al carattere ascii (quindi devo andare a modificare la memorizzazione
+            // nella funzione ShipPlacement e far si che memorizzi colonnaCoord)
+
+            //dovrò anche cambiare il modo in cui vengo visualizzati i valori delle colonne nella funzione del debug barche
+
+
+
+
+
+
+            return false;
+        }
+
+        /// <summary>
+        /// funzione per settare tutti i valori di una riga di una matrice a 0
+        /// </summary>
+        /// <param name="boats"> matrice in cui resettare i valori </param>
+        /// <param name="j"> indice della riga da resettare </param>
+        static void SetZero(int[,] boats, int j)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                boats[j, i] = 0;            // j = riga da resettare
+            }                               // i = cella della riga in cui resettare
+        }
+
+
+
+
     }
 }
