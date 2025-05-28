@@ -1416,7 +1416,7 @@ namespace Battaglia_Navale
             Console.WriteLine("---------------------------------------------------------------------");
             Console.WriteLine("|  " + boats[6, 0] + "  |   " + boats[6, 1] + "      |        " + boats[6, 2] + "       |" + boats[6, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
-            Console.WriteLine("|  " + boats[7, 0] + "  |   " + boats[7, 1]) + "      |        " + boats[7, 2] + "       |" + boats[7, 3]);
+            Console.WriteLine("|  " + boats[7, 0] + "  |   " + boats[7, 1] + "      |        " + boats[7, 2] + "       |" + boats[7, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
             Console.WriteLine("|  " + boats[8, 0] + "  |   " + boats[8, 1] + "      |        " + boats[8, 2] + "       |" + boats[8, 3]);
             Console.WriteLine("---------------------------------------------------------------------");
@@ -1452,51 +1452,120 @@ namespace Battaglia_Navale
                         return true;        //comunica che è avvenuto in colpito e affondato
                     }
                 }
+
                 //-----------------------------------------------------------------------------------------------------------------------
                 //se la barca da analizzare è lunga 2
                 //-----------------------------------------------------------------------------------------------------------------------
                 else if (boats[j, 3] == 2)
                 {
-                    //se la barca è verticale - boats[j,2] memorizza 0 se la barca è orizzontale e 1 se è verticale
-                    if (boats[j, 2] == 1)
+                    if (boats[j, 2] == 1)    //se la barca è verticale - boats[j,2] memorizza 0 se la barca è orizzontale e 1 se è verticale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
-                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della riga
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&       // boats[j,0] è la riga  -  boats[j,1] è il valore della colonna,
+                            (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
                             (boats[j, 3] != 0))
                         {
                             SetZero(boats, j);
                             return true;
                         }
-                        else //orizzontale
+                    }
+                    else                    //se la barca è orizzontale
+                    {
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
                         {
-                            //+1 all'altro
+                            SetZero(boats, j);
+                            return true;
                         }
                     }
                 }
 
+                //-----------------------------------------------------------------------------------------------------------------------
+                //se la barca da analizzare è lunga 3
+                //-----------------------------------------------------------------------------------------------------------------------
+                else if (boats[j, 3] == 3)
+                {
+                    if (boats[j, 2] == 1)    //barca verticale
+                    {
+                        //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle giù
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
+                        {
+                            SetZero(boats, j);
+                            return true;
+                        }
+                    }
+                    else                    //barca orizzontale
+                    {
+                        //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle affianco
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
+                        {
+                            SetZero(boats, j);
+                            return true;
+                        }
+                    }
 
+                }
 
-
-
+                //-----------------------------------------------------------------------------------------------------------------------
+                //se la barca da analizzare è lunga 4
+                //-----------------------------------------------------------------------------------------------------------------------
+                else if (boats[j, 3] == 4)
+                {
+                    if (boats[j, 2] == 1)    //barca verticale
+                    {
+                        //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle giù
+                            (player[(boats[j, 0]), (boats[j, 1] + 3)] == 'X') &&    //3 caselle giù
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
+                        {
+                            SetZero(boats, j);
+                            return true;
+                        }
+                    }
+                    else                    //barca orizzontale
+                    {
+                        //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
+                        if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle affianco
+                            (player[(boats[j, 0] + 3), (boats[j, 1])] == 'X') &&    //3 caselle affianco
+                            (boats[j, 0] != 0) &&
+                            (boats[j, 1] != 0) &&
+                            (boats[j, 2] != 0) &&
+                            (boats[j, 3] != 0))
+                        {
+                            SetZero(boats, j);
+                            return true;
+                        }
+                    }
+                }
             }
 
-
-
-            //in boats dovremo memorizzare il valore diretto numerico e non il valore che corrisponde al carattere ascii (quindi devo andare a modificare la memorizzazione
-            // nella funzione ShipPlacement e far si che memorizzi colonnaCoord)
-
-            //dovrò anche cambiare il modo in cui vengo visualizzati i valori delle colonne nella funzione del debug barche
-
-
-
-
-
-
-            return false;
+            return false;   //se nessuno dei controlli ha attivato un return allora comunica che non è avvenuti un colpito e affondato
         }
 
         /// <summary>
