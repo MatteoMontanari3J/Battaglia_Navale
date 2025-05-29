@@ -1343,7 +1343,7 @@ namespace Battaglia_Navale
             Console.ReadKey();
         }
 
-        /// <summary>
+        		/// <summary>
         /// FUNZIONE PER CONTROLLARE CHE SIA AVVENUTO UN COLPITO E AFFONDATO
         /// </summary>
         /// <param name="boats"> informazioni delle barche del giocatore a cui appartiene il campo da analizzare </param>
@@ -1362,9 +1362,7 @@ namespace Battaglia_Navale
                     //se nelle coordinate di quella barca c'è una X (quindi la barca è distrutta), e se quel pezzo di matrice non è stato resettato
                     if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
                         (boats[j, 0] != 0) &&
-                        (boats[j, 1] != 0) &&       // boats[j,0] è la riga  -  boats[j,1] è il valore della colonna,
-                        (boats[j, 2] != 0) &&
-                        (boats[j, 3] != 0))
+                        (boats[j, 1] != 0))
                     {
                         SetZero(boats, j);  //setta la riga a 0 così questa condizione non viene vista
                         return true;        //comunica che è avvenuto in colpito e affondato
@@ -1382,9 +1380,7 @@ namespace Battaglia_Navale
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
                             (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
@@ -1395,9 +1391,7 @@ namespace Battaglia_Navale
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
                             (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
@@ -1417,9 +1411,7 @@ namespace Battaglia_Navale
                             (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //1 casella giù
                             (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
@@ -1432,9 +1424,7 @@ namespace Battaglia_Navale
                             (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //1 casella affianco
                             (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
@@ -1456,9 +1446,7 @@ namespace Battaglia_Navale
                             (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
                             (player[(boats[j, 0]+3), (boats[j, 1])] == 'X') &&    //3 caselle giù
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
@@ -1472,9 +1460,7 @@ namespace Battaglia_Navale
                             (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
                             (player[(boats[j, 0]), (boats[j, 1]+3)] == 'X') &&    //3 caselle affianco
                             (boats[j, 0] != 0) &&
-                            (boats[j, 1] != 0) &&
-                            (boats[j, 2] != 0) &&
-                            (boats[j, 3] != 0))
+                            (boats[j, 1] != 0))
                         {
                             SetZero(boats, j);
                             return true;
