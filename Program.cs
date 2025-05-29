@@ -1371,7 +1371,7 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
-                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
+                            (player[(boats[j, 0]+1), (boats[j, ])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
@@ -1384,7 +1384,7 @@ namespace Battaglia_Navale
                     else                    //se la barca è orizzontale
                     {
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
-                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
+                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
@@ -1405,8 +1405,8 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella giù
-                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle giù
+                            (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
@@ -1420,8 +1420,8 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella affianco
-                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
@@ -1443,9 +1443,9 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella giù
-                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle giù
-                            (player[(boats[j, 0]), (boats[j, 1] + 3)] == 'X') &&    //3 caselle giù
+                            (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
+                            (player[(boats[j, 0]+3), (boats[j, 1])] == 'X') &&    //3 caselle giù
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
@@ -1459,9 +1459,9 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella affianco
-                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle affianco
-                            (player[(boats[j, 0] + 3), (boats[j, 1])] == 'X') &&    //3 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1]+3)] == 'X') &&    //3 caselle affianco
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0) &&
                             (boats[j, 2] != 0) &&
