@@ -86,7 +86,7 @@ namespace Battaglia_Navale
             int rigaColpita = -1;
             int colonnaColpita = -1;
             char colonnaColpitaChar = ' ';
-            int direzioneTrovata = -1; 
+            int direzioneTrovata = -1;
 
             bool end = false;   //variabile per determinare se la partita è finita o no
 
@@ -136,7 +136,7 @@ namespace Battaglia_Navale
                 {
                     if (difficoltà) //se la difficoltà è alta
                     {
-                        TurnoIaSmart(ia, player, iaHidden, playerHidden,ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref naveTrovata, ref rigaColpita, ref colonnaColpita, ref colonnaColpitaChar, ref direzioneTrovata );
+                        TurnoIaSmart(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref naveTrovata, ref rigaColpita, ref colonnaColpita, ref colonnaColpitaChar, ref direzioneTrovata);
                     }
                     else    //se la difficoltà è bassa
                     {
@@ -152,7 +152,7 @@ namespace Battaglia_Navale
             Console.ReadKey();
         }
 
-        
+
         /// <summary>
         /// funzione che permette al giocatore di selezionare la difficoltà
         /// </summary>
@@ -1103,6 +1103,7 @@ namespace Battaglia_Navale
         /// <param name="turn"> variabile con cui si determina chi sta sparando. false=ia, true=giocatore </param>
         static void Sparo(char[,] ia, char[,] iaHidden, char[,] player, char[,] playerHidden, ref bool colpito, ref int riga, ref char colonna, ref bool turn)
         {
+            int i = 0;
             int colonnaCoord = 0;                               //cambiato per far si che le coordinate arrivino dalla funzione del turno del giocatore/IA
             switch (colonna) //non troppo smart (copypasta)
             {
@@ -1147,37 +1148,54 @@ namespace Battaglia_Navale
                     colonnaCoord = 10;
                     break;
             }
+            while (i < 1)
+            {
+                if (turn)   //se turn è true allora è turno del giocatore
+                {
+                    if (ia[riga, colonnaCoord] == '█')
+                    {
+                        ia[riga, colonnaCoord] = 'X';                 //il campo dell'IA viene aggiornato
+                        iaHidden[riga, colonnaCoord] = 'X';           //il campo dell'IA nascosto viene aggiornato
+                        Console.WriteLine("\n" + "Hai colpito");
+                        colpito = true;
+                        i++;
 
-            if (turn)   //se turn è true allora è turno del giocatore
-            {
-                if (ia[riga, colonnaCoord] == '█')
-                {
-                    ia[riga, colonnaCoord] = 'X';                 //il campo dell'IA viene aggiornato
-                    iaHidden[riga, colonnaCoord] = 'X';           //il campo dell'IA nascosto viene aggiornato
-                    Console.WriteLine("\n" + "Hai colpito");
-                    colpito = true;
+                    }
+                    else if (ia[riga, colonna] == 'O')
+                    {
+                        Console.WriteLine("non puoi sparare due volte nello stesso punto");
+                        i = i;
+                    }
+                    else
+                    {
+                        ia[riga, colonnaCoord] = 'O';
+                        iaHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
+                        colpito = false;
+                        i++;
+                    }
+
                 }
-                else
+                else    //se non è true allora è turno dell'IA
                 {
-                    ia[riga, colonnaCoord] = 'O';
-                    iaHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
-                    colpito = false;
-                }
-            }
-            else    //se non è true allora è turno dell'IA
-            {
-                if (player[riga, colonnaCoord] == '█')
-                {
-                    player[riga, colonnaCoord] = 'X';                 //il campo del giocatore viene aggiornato
-                    playerHidden[riga, colonnaCoord] = 'X';           //il campo del giocatore nascosto viene aggiornato
-                    Console.WriteLine("Sei stato colpito");
-                    colpito = true;
-                }
-                else
-                {
-                    player[riga, colonnaCoord] = 'O';
-                    playerHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
-                    colpito = false;
+                    if (player[riga, colonnaCoord] == '█')
+                    {
+                        player[riga, colonnaCoord] = 'X';                 //il campo del giocatore viene aggiornato
+                        playerHidden[riga, colonnaCoord] = 'X';           //il campo del giocatore nascosto viene aggiornato
+                        Console.WriteLine("Sei stato colpito");
+                        colpito = true;
+                        i++;
+                    }
+                    else if (player[riga, colonna] == 'O')
+                    {
+                        i = i;
+                    }
+                    else
+                    {
+                        player[riga, colonnaCoord] = 'O';
+                        playerHidden[riga, colonnaCoord] = 'O';           //i campi vengono aggiornati. O significa che in quel punto si ha mancato
+                        colpito = false;
+                        i++;
+                    }
                 }
             }
         }
@@ -1191,7 +1209,7 @@ namespace Battaglia_Navale
             Console.WriteLine("  |  |    |       | \\      ");
             Console.WriteLine("  |  |    | ______|  \\     ");
             Console.WriteLine(" -    -   | ______   /     ");
-            Console.WriteLine(" \\    /  |       | /      ");
+            Console.WriteLine(" \\    /   |       | /      ");
             Console.WriteLine("   --  (V)|           (H)  ");
         }
 
@@ -1343,7 +1361,7 @@ namespace Battaglia_Navale
             Console.ReadKey();
         }
 
-        		/// <summary>
+        /// <summary>
         /// FUNZIONE PER CONTROLLARE CHE SIA AVVENUTO UN COLPITO E AFFONDATO
         /// </summary>
         /// <param name="boats"> informazioni delle barche del giocatore a cui appartiene il campo da analizzare </param>
@@ -1378,7 +1396,7 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
-                            (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //il +1 è perchè bisogna contare la casella sotto, qundi si aumenta il dato della colonna
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1389,7 +1407,7 @@ namespace Battaglia_Navale
                     else                    //se la barca è orizzontale
                     {
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&
-                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //il +1 è perchè bisogna contare la casella affianco, qundi si aumenta il dato della riga
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1408,8 +1426,8 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //1 casella giù
-                            (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle giù
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1421,8 +1439,8 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //1 casella affianco
-                            (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle affianco
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1442,9 +1460,9 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]+1), (boats[j, 1])] == 'X') &&    //1 casella giù
-                            (player[(boats[j, 0]+2), (boats[j, 1])] == 'X') &&    //2 caselle giù
-                            (player[(boats[j, 0]+3), (boats[j, 1])] == 'X') &&    //3 caselle giù
+                            (player[(boats[j, 0] + 1), (boats[j, 1])] == 'X') &&    //1 casella giù
+                            (player[(boats[j, 0] + 2), (boats[j, 1])] == 'X') &&    //2 caselle giù
+                            (player[(boats[j, 0] + 3), (boats[j, 1])] == 'X') &&    //3 caselle giù
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1456,9 +1474,9 @@ namespace Battaglia_Navale
                     {
                         //se la casella di partenza e la casella sotto sono X e se la matrice delle informazioni non è stata resettata
                         if ((player[(boats[j, 0]), boats[j, 1]] == 'X') &&          //casella di generazione
-                            (player[(boats[j, 0]), (boats[j, 1]+1)] == 'X') &&    //1 casella affianco
-                            (player[(boats[j, 0]), (boats[j, 1]+2)] == 'X') &&    //2 caselle affianco
-                            (player[(boats[j, 0]), (boats[j, 1]+3)] == 'X') &&    //3 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1] + 1)] == 'X') &&    //1 casella affianco
+                            (player[(boats[j, 0]), (boats[j, 1] + 2)] == 'X') &&    //2 caselle affianco
+                            (player[(boats[j, 0]), (boats[j, 1] + 3)] == 'X') &&    //3 caselle affianco
                             (boats[j, 0] != 0) &&
                             (boats[j, 1] != 0))
                         {
@@ -1531,7 +1549,7 @@ namespace Battaglia_Navale
                 }
                 else
                 {
-                    // Colpo su acqua o su cella già colpita: chiudi turno IA
+                    // Colpo su acqua: chiudi turno IA
                     break;
                 }
             }
@@ -1565,7 +1583,7 @@ namespace Battaglia_Navale
             }
             // In tutti i casi, la funzione termina dopo un solo colpo IA
         }
-        
+
         /// <summary>
         /// controlla se la partita è finita. se è finita allora avvia ChiusuraPartita dicendogli chi ha vinto
         /// </summary>
@@ -1643,7 +1661,6 @@ namespace Battaglia_Navale
                 return false;       //non vuole fare un'altra partita
             }
         }
-
 
 
 
