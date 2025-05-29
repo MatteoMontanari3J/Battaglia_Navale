@@ -272,21 +272,40 @@ namespace Battaglia_Navale
             bool vert = false;
             bool passed = false;
 
+            bool repeat = true;     //usato per la ripetizione dei try & catch degli inserimenti
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
             for (int i = 0; i < somma; i++)
             {
+                repeat = true;      //ogni volta, repeat deve essere pronto a ripetere per evitare errori di inserimento
 
-                Console.Clear();
-                FieldShow(player);      //si mostra il campo del giocatore al giocatore
+                while (repeat)
+                {
+                    try
+                    {
+                        Console.Clear();
+                        FieldShow(player);      //si mostra il campo del giocatore al giocatore
 
-                Console.WriteLine('\n');
-                Console.WriteLine("BARCHE DA PIAZZARE:");
-                Console.WriteLine("Navi da 1 casella: " + ship1);
-                Console.WriteLine("Navi da 2 caselle: " + ship2);
-                Console.WriteLine("Navi da 3 caselle: " + ship3);
-                Console.WriteLine("Navi da 4 caselle: " + ship4);
-                Console.WriteLine("\n");
-                Console.WriteLine("Scegli il tipo di nave da piazzare. Se provi a mettere una barca sopra l'altra, non succederà niente e la barca non verrà piazzata.");
-                scelta = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine('\n');
+                        Console.WriteLine("BARCHE DA PIAZZARE:");
+                        Console.WriteLine("Navi da 1 casella: " + ship1);
+                        Console.WriteLine("Navi da 2 caselle: " + ship2);
+                        Console.WriteLine("Navi da 3 caselle: " + ship3);
+                        Console.WriteLine("Navi da 4 caselle: " + ship4);
+                        Console.WriteLine("\n");
+                        Console.WriteLine("Scegli il tipo di nave da piazzare. Se provi a mettere una barca sopra l'altra, non succederà niente e la barca non verrà piazzata.");
+                        scelta = Convert.ToInt32(Console.ReadLine());
+
+                        repeat = false; //non ripetere se l'inserimento va bene
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Perfavore inserire un valore valido.");
+                        Console.ReadKey();
+                    }
+
+                }
 
                 boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
 
@@ -309,11 +328,25 @@ namespace Battaglia_Navale
                         passed = false; // per rinnovare il ciclo dopo la prima volta
                         while (!passed)
                         {
-                            Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                            Console.WriteLine("Coordinata della riga (numero):");
-                            riga = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Coordinata della colonna (lettera)");
-                            colonna = char.Parse(Console.ReadLine());
+                            repeat = true;
+                            while (repeat)
+                            {
+                                try
+                                {
+                                    Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                    Console.WriteLine("Coordinata della riga (numero):");
+                                    riga = int.Parse(Console.ReadLine());
+                                    Console.WriteLine("Coordinata della colonna (lettera)");
+                                    colonna = char.Parse(Console.ReadLine());
+
+                                    repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Inserire un valore valido.");
+                                    Console.ReadKey();
+                                }
+                            }
 
                             //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -359,11 +392,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -389,11 +436,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -444,11 +505,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -474,11 +549,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -515,7 +604,11 @@ namespace Battaglia_Navale
                     {
                         Console.WriteLine("Vuoi mettere la nave in orizzontale o verticale? (v per orizzontale, h per verticale)");
                         FrecceVisive();
+
+
                         char risp = char.Parse(Console.ReadLine());
+
+
                         if (risp == 'v')
                         {
                             vert = true;
@@ -529,11 +622,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna
 
@@ -559,11 +666,25 @@ namespace Battaglia_Navale
                             passed = false; // per rinnovare il ciclo dopo prima volta
                             while (!passed)
                             {
-                                Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
-                                Console.WriteLine("Coordinata della riga (numero):");
-                                riga = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Coordinata della colonna (lettera)");
-                                colonna = char.Parse(Console.ReadLine());
+                                repeat = true;
+                                while (repeat)
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine("Scegliere le coordinate della barca. Inserire 10 per la coordinata 0.");
+                                        Console.WriteLine("Coordinata della riga (numero):");
+                                        riga = int.Parse(Console.ReadLine());
+                                        Console.WriteLine("Coordinata della colonna (lettera)");
+                                        colonna = char.Parse(Console.ReadLine());
+
+                                        repeat = false;     //non ripetere più se tutti e due gli inserimenti sono andati bene
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("Inserire un valore valido.");
+                                        Console.ReadKey();
+                                    }
+                                }
 
                                 //boats[i, 1] = Convert.ToInt32(colonna);     //memorizzare la colonna old
 
@@ -618,6 +739,9 @@ namespace Battaglia_Navale
                 else
                     boats[i, 2] = 0;
             }
+
+            Console.ForegroundColor = ConsoleColor.White;   //reset del colore
+            Console.Clear();
         }
 
         /// <summary>
@@ -944,6 +1068,15 @@ namespace Battaglia_Navale
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ia"></param>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <param name="size"></param>
+        /// <param name="vertical"></param>
+        /// <returns></returns>
         static bool AreaLibera(char[,] ia, int row, int col, int size, bool vertical)
         {
             if (!vertical && col + size <= 10)
@@ -1163,7 +1296,7 @@ namespace Battaglia_Navale
                     }
                     else if (ia[riga, colonna] == 'O')
                     {
-                        Console.WriteLine("non puoi sparare due volte nello stesso punto");
+                        Console.WriteLine("Non puoi sparare due volte nello stesso punto");
                         i = i;
                     }
                     else
@@ -1230,28 +1363,62 @@ namespace Battaglia_Navale
 
             bool drowned = false;   //variabile usata per segnalare un colpito ed affondato (ci si mette il ritorno della funzione)
 
+            bool repeat = true;
+
             do
             {
+                repeat = true;  //ogni volta che c'è un turno, per il try & catch, repeat deve sempre essere pronto a ripetere in caso di errori
+
                 Console.WriteLine("Il tuo campo:");
+
+                Console.ForegroundColor = ConsoleColor.Green;   //colore del campo del giocatore
                 FieldShow(player);        //mostra delle tabelle del giocatore e dell'IA nascosta
-                Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer:");
+
+                Console.ForegroundColor = ConsoleColor.White;   //reset del colore per la barra spaziatrice
+                Console.WriteLine("\n\n\n---------------------------\n\n\nIl campo del computer coperto:");
+
+                Console.ForegroundColor = ConsoleColor.Red; //colore del campo avversario
                 FieldShow(iaHidden);
 
-                //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
-                Console.WriteLine("\n\n\n\n\nInserire la riga in cui sparare (numero)");
-                riga = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
-                colonna = Convert.ToChar(Console.ReadLine());
+                Console.ForegroundColor = ConsoleColor.White;   //reset del colore
 
+                while (repeat)
+                {
+                    try
+                    {
+                        //raccolta coordinate in cui colpire in caso si debba colpire di nuovo
+                        Console.WriteLine("\n\n\n\n\nInserire la riga in cui sparare (numero)");
+                        riga = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("\nInserire la colonna in cui sparare (lettera)");
+                        colonna = Convert.ToChar(Console.ReadLine());
+                        repeat = false;     //smetti di ripetere se i valori inseriti vanno bene
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Per favore inserire dei valori validi.");
+                        Console.ReadKey();
+                    }
+                }
+
+                Console.ForegroundColor = ConsoleColor.DarkYellow;  //darkyellow per dire che hai colpito
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn);
 
                 drowned = ColpitoAffondato(boatsIa, ia);    //se si è verificato un colpito ed affondato nuovo
                 if (drowned)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;   //green per dire colpito ed affondato
                     Console.WriteLine("\n\nCOLPITO ED AFFONDATO!!!\n\n");
+                }
+
+                Console.ReadKey();
             }
             while (colpito); //se si ha colpito una nave, allora fai colpire ancora
 
+            Console.ForegroundColor = ConsoleColor.Red;     //red per dire che hai mancato
             Console.WriteLine("\n" + "Hai mancato.");
+            Console.ForegroundColor = ConsoleColor.White;
+
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -1285,13 +1452,19 @@ namespace Battaglia_Navale
 
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn); //sparo
 
+                Console.ForegroundColor = ConsoleColor.Green;
+                FieldShow(player);  //ti mostra il tuo campo
+                Console.ForegroundColor = ConsoleColor.White;
+
                 drowned = ColpitoAffondato(boatsPlayer, player);    //se si è verificato un colpito ed affondato nuovo
                 if (drowned)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;     //red per il colpito ed affondato nemico
                     Console.WriteLine("\n\nCOLPITO ED AFFONDATO!!!\n\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
 
-                //il giocatore vede il proprio campo dopo il colpo
-                Console.Clear();
-                FieldShow(player);
+                Console.ForegroundColor = ConsoleColor.White;   //reset del colore
                 Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
                 Console.ReadKey();
             }
@@ -1303,7 +1476,7 @@ namespace Battaglia_Navale
         /// </summary>
         static void SchermataIniziale()
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Blue;
 
             Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
@@ -1320,7 +1493,7 @@ namespace Battaglia_Navale
 
             // Print the message with additional newlines for a bigger visual effect
             Console.WriteLine("\n\n\n                                                                                 *************************************************  ");
-            Console.WriteLine("                                                                                     PREMI UN TASTO QUALSIASI PER CONTINUARE          ");
+            Console.WriteLine("                                                                                       PREMI UN TASTO QUALSIASI PER INIZIARE          ");
             Console.WriteLine("                                                                                 *************************************************  ");
             Console.WriteLine("\n\n\n");
 
