@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -89,7 +89,10 @@ namespace Battaglia_Navale
             int colonnaColpita = -1;
             char colonnaColpitaChar = ' ';
             int direzioneTrovata = -1;
-            int direzione = 0;              //
+            int direzione = 0;
+            int faseTargeting = 0;
+            int rigaTargetCorrente = -1;
+            int colonnaTargetCorrente = -1;            //
 
             bool end = false;   //variabile per determinare se la partita è finita o no
 
@@ -127,7 +130,7 @@ namespace Battaglia_Navale
 
                     // ShipPlacement(player, riga, colonna, boatsPlayer);   //posizionamento barche del giocatore
 
-                    ShipPlacementIA(player, boatsPlayer);   //per il debug
+                    ShipPlacement(player, boatsPlayer);  
 
                     ShipPlacementIA(ia, boatsIa);    //posizionemento barche dell'IA
 
@@ -135,9 +138,8 @@ namespace Battaglia_Navale
                 }
 
                 Console.WriteLine("TURNO DEL GIOCATORE \n-----------------------------------------------------------------------------------");
-                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsIa);  //turno del giocatore
-
-                end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);   //controlla se la parita è finita
+                TurnoGiocatore(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsIa);
+                end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);   //controlla se la parita è finita dopo il colpo
 
                 if (!end)    //se la partita non è finita
                 {
@@ -146,7 +148,7 @@ namespace Battaglia_Navale
                     {
                         do
                         {
-                            TurnoIaSmart(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref naveTrovata, ref rigaColpita, ref colonnaColpita, ref colonnaColpitaChar, ref direzioneTrovata, ref direzione);
+                            TurnoIaSmart(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref naveTrovata, ref rigaColpita, ref colonnaColpita, ref colonnaColpitaChar, ref direzioneTrovata, ref direzione, ref faseTargeting, ref rigaTargetCorrente, ref colonnaTargetCorrente, ref end, ref gameStart, ref gameRepeat);
                         }
                         while (colpito);
                     }
@@ -154,7 +156,7 @@ namespace Battaglia_Navale
                     {
                         do
                         {
-                            TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer);
+                            TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref end, ref gameStart, ref gameRepeat);
                         }
                         while (colpito);
                     }
@@ -1377,7 +1379,7 @@ namespace Battaglia_Navale
         /// <param name="turn"> variabile turno. qui viene settata come true </param>
         /// <param name="riga"> riga in cui colpire </param>
         /// <param name="colonna"> colonna in cui colpire </param>
-        static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna, int[,] boatsIa)
+        static void TurnoGiocatore(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna, int[,] boatsIa, ref bool end, ref bool gameStart, ref bool gameRepeat)
         {
             turn = true;    //il turno è del giocatore, quindi la variabile va settata a true
 
@@ -1427,6 +1429,7 @@ namespace Battaglia_Navale
 
                     Console.ForegroundColor = ConsoleColor.DarkYellow;  //darkyellow per dire che hai colpito
                     Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn, ref ripetiSparo);    //ripeti lo sparo se la funzione sparo ritorna true in repeat
+                    end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
                     Console.ForegroundColor = ConsoleColor.White;
 
                 }
@@ -1461,7 +1464,7 @@ namespace Battaglia_Navale
         /// <param name="turn"> variabile turno. qui viene settata come true </param>
         /// <param name="riga"> riga in cui colpire </param>
         /// <param name="colonna"> colonna in cui colpire </param>
-        static bool TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna, int[,] boatsPlayer)
+        static bool TurnoIARandom(char[,] ia, char[,] player, char[,] iaHidden, char[,] playerHidden, ref bool colpito, ref bool turn, ref int riga, ref char colonna, int[,] boatsPlayer, ref bool end, ref bool gameStart, ref bool gameRepeat)
         {
             turn = false;    //il turno è del giocatore, quindi la variabile va settata a true
 
@@ -1478,6 +1481,7 @@ namespace Battaglia_Navale
                 riga = random.Next(1, 11);
                 colonna = Convert.ToChar(random.Next(97, 107));
                 Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref riga, ref colonna, ref turn, ref repeat); //sparo
+                end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
             }
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -1705,6 +1709,246 @@ namespace Battaglia_Navale
             }                               // i = cella della riga in cui resettare
         }
 
+        static void TurnoIaSmart(
+        char[,] ia,
+        char[,] player,
+        char[,] iaHidden,
+        char[,] playerHidden,
+        ref bool colpito,
+        ref bool turn,
+        ref int riga,
+        ref char colonna,
+        int[,] boatsPlayer,
+        ref bool naveTrovata,
+        ref int rigaColpita,
+        ref int colonnaColpita,
+        ref char colonnaColpitaChar,
+        ref int direzioneTrovata,     // -1 = nessuna, 0=su, 1=giu, 2=sinistra, 3=destra
+        ref int direzione,            // usato per ciclare sulle direzioni (0-3)
+        ref int faseTargeting,        // 0=cerca direzione, 1=avanti, 2=indietro
+        ref int rigaTargetCorrente,   // posizione corrente di targeting (inizialmente = rigaColpita)
+        ref int colonnaTargetCorrente,// idem per la colonna
+        ref bool end,
+        ref bool gameStart,
+        ref bool gameRepeat)
+
+        {
+            // Direzioni: 0=su, 1=giu, 2=sinistra, 3=destra
+            int[] spostamentoRiga = { -1, 1, 0, 0 };
+            int[] spostamentoColonna = { 0, 0, -1, 1 };
+
+            turn = false; // è il turno dell'IA
+
+            // HUNT - cerca una nuova nave da colpire
+            if (!naveTrovata)
+            {
+                // Tiro casuale finché non colpisce una nave non affondata
+                bool trovato = false;
+                while (!trovato)
+                {
+                    TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer, ref end, ref gameStart, ref gameRepeat);
+
+                    int colonnaNum = (char.ToUpper(colonna) - 'A') + 1;
+
+                    // Colpo su nave (█)
+                    if (player[riga, colonnaNum] == 'X')
+                    {
+                        if (ColpitoAffondato(boatsPlayer, player))
+                        {
+                            // Affondato subito (nave da 1), rimani in hunt
+                            naveTrovata = false;
+                        }
+                        else
+                        {
+                            naveTrovata = true;
+                            rigaColpita = riga;
+                            colonnaColpita = colonnaNum;
+                            colonnaColpitaChar = colonna;
+                            direzioneTrovata = -1;
+                            direzione = 0;
+                            faseTargeting = 0;
+                            rigaTargetCorrente = rigaColpita;
+                            colonnaTargetCorrente = colonnaColpita;
+                        }
+                        trovato = true;
+                    }
+                    else
+                    {
+                        trovato = true; // ha colpito acqua o già colpito, chiudi turno
+                    }
+
+                    end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
+                    if (end) return;
+                }
+            }
+            // TARGET - nave trovata, cerca di affondarla
+            else
+            {
+                bool targetingFinito = false;
+                while (!targetingFinito && !end)
+                {
+                    // Fase 0: trova la direzione (cicla su 0-3)
+                    if (faseTargeting == 0)
+                    {
+                        while (direzione < 4)
+                        {
+                            int nuovaRiga = rigaColpita + spostamentoRiga[direzione];
+                            int nuovaColonna = colonnaColpita + spostamentoColonna[direzione];
+
+                            if (nuovaRiga >= 1 && nuovaRiga <= 10 && nuovaColonna >= 1 && nuovaColonna <= 10)
+                            {
+                                if (player[nuovaRiga, nuovaColonna] == '█')
+                                {
+                                    int temp_riga = nuovaRiga;
+                                    char temp_colonna = (char)('A' + nuovaColonna - 1);
+
+                                    bool repeatSparo = true;
+                                    Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref temp_riga, ref temp_colonna, ref turn, ref repeatSparo);
+
+                                    end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
+                                    if (end) return;
+
+                                    if (player[nuovaRiga, nuovaColonna] == 'X')
+                                    {
+                                        if (ColpitoAffondato(boatsPlayer, player))
+                                        {
+                                            naveTrovata = false;
+                                            targetingFinito = true;
+                                            break;
+                                        }
+                                        // Direzione trovata!
+                                        direzioneTrovata = direzione;
+                                        faseTargeting = 1;
+                                        rigaTargetCorrente = nuovaRiga;
+                                        colonnaTargetCorrente = nuovaColonna;
+                                        targetingFinito = true; // chiudi turno, targeting prosegue prossimo turno
+                                        break;
+                                    }
+                                }
+                            }
+                            direzione++;
+                        }
+                        // Se dopo tutte le direzioni non trova nulla, resetta targeting
+                        if (direzione >= 4)
+                        {
+                            naveTrovata = false;
+                            faseTargeting = 0;
+                            direzione = 0;
+                            targetingFinito = true;
+                        }
+                    }
+                    // Fase 1: sparo avanti nella direzione trovata
+                    else if (faseTargeting == 1)
+                    {
+                        int nuovaRiga = rigaTargetCorrente + spostamentoRiga[direzioneTrovata];
+                        int nuovaColonna = colonnaTargetCorrente + spostamentoColonna[direzioneTrovata];
+
+                        if (nuovaRiga < 1 || nuovaRiga > 10 || nuovaColonna < 1 || nuovaColonna > 10)
+                        {
+                            // Fuori dai limiti -> passa a fase 2 (indietro)
+                            faseTargeting = 2;
+                            rigaTargetCorrente = rigaColpita;
+                            colonnaTargetCorrente = colonnaColpita;
+                            continue;
+                        }
+
+                        if (player[nuovaRiga, nuovaColonna] == '█')
+                        {
+                            int temp_riga = nuovaRiga;
+                            char temp_colonna = (char)('A' + nuovaColonna - 1);
+
+                            bool repeatSparo = true;
+                            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref temp_riga, ref temp_colonna, ref turn, ref repeatSparo);
+
+                            end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
+                            if (end) return;
+
+                            if (player[nuovaRiga, nuovaColonna] == 'X')
+                            {
+                                if (ColpitoAffondato(boatsPlayer, player))
+                                {
+                                    naveTrovata = false;
+                                    faseTargeting = 0;
+                                    targetingFinito = true;
+                                    break;
+                                }
+                                // Avanza ancora nella stessa direzione!
+                                rigaTargetCorrente = nuovaRiga;
+                                colonnaTargetCorrente = nuovaColonna;
+                                targetingFinito = true; // chiudi turno, targeting prosegue prossimo turno
+                                break;
+                            }
+                        }
+                        else // acqua o già colpito
+                        {
+                            // Passa a targeting indietro
+                            faseTargeting = 2;
+                            rigaTargetCorrente = rigaColpita;
+                            colonnaTargetCorrente = colonnaColpita;
+                        }
+                    }
+                    // Fase 2: targeting all'indietro (direzione opposta)
+                    else if (faseTargeting == 2)
+                    {
+                        int opposta = (direzioneTrovata % 2 == 0) ? direzioneTrovata + 1 : direzioneTrovata - 1;
+                        int nuovaRiga = rigaTargetCorrente + spostamentoRiga[opposta];
+                        int nuovaColonna = colonnaTargetCorrente + spostamentoColonna[opposta];
+
+                        if (nuovaRiga < 1 || nuovaRiga > 10 || nuovaColonna < 1 || nuovaColonna > 10)
+                        {
+                            // Fine targeting, nave affondata o acqua su entrambi i lati
+                            naveTrovata = false;
+                            faseTargeting = 0;
+                            targetingFinito = true;
+                            break;
+                        }
+
+                        if (player[nuovaRiga, nuovaColonna] == '█')
+                        {
+                            int temp_riga = nuovaRiga;
+                            char temp_colonna = (char)('A' + nuovaColonna - 1);
+
+                            bool repeatSparo = true;
+                            Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref temp_riga, ref temp_colonna, ref turn, ref repeatSparo);
+
+                            end = VerificaFine(player, ia, ref gameRepeat, ref gameStart);
+                            if (end) return;
+
+                            if (player[nuovaRiga, nuovaColonna] == 'X')
+                            {
+                                if (ColpitoAffondato(boatsPlayer, player))
+                                {
+                                    naveTrovata = false;
+                                    faseTargeting = 0;
+                                    targetingFinito = true;
+                                    break;
+                                }
+                                // Continua all'indietro!
+                                rigaTargetCorrente = nuovaRiga;
+                                colonnaTargetCorrente = nuovaColonna;
+                                targetingFinito = true; // chiudi turno, targeting prosegue prossimo turno
+                                break;
+                            }
+                        }
+                        else // acqua o già colpito
+                        {
+                            naveTrovata = false;
+                            faseTargeting = 0;
+                            targetingFinito = true;
+                        }
+                    }
+                }
+            }
+
+            // Stampa stato a fine turno
+            Console.ForegroundColor = ConsoleColor.Green;
+            FieldShow(player);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("il computer ha sparato, premi un tasto per continuare");
+            Console.ReadKey(true);
+            Console.Clear();
+        }
+
         /// <summary>
         /// controlla se la partita è finita. se è finita allora avvia ChiusuraPartita dicendogli chi ha vinto
         /// </summary>
@@ -1783,122 +2027,8 @@ namespace Battaglia_Navale
             }
         }
 
-        static void TurnoIaSmart
-        (
-        char[,] ia,
-        char[,] player,
-        char[,] iaHidden,
-        char[,] playerHidden,
-        ref bool colpito,
-        ref bool turn,
-        ref int riga,
-        ref char colonna,
-        int[,] boatsPlayer,
-        ref bool naveTrovata,
-        ref int rigaColpita,
-        ref int colonnaColpita,
-        ref char colonnaColpitaChar,
-        ref int direzioneTrovata,
-        ref int direzione
-        )
-        {
-            turn = false; // Dopo ogni colpo IA, passa il turno al giocatore
-            Random casuale = new Random(DateTime.Now.Millisecond);
-
-            bool drown = false;     //per il colpito e affondato
-
-            bool repeat = true;     //metto il bool qua perchè PER ORA non saprei dove e se metterlo
-
-            Console.Clear();    //pulisci console all'inizio del turno
-
-            // HUNT: spara random finché non trova una nave che non sia da 1
-            while (!naveTrovata)
-            {
-                drown = TurnoIARandom(ia, player, iaHidden, playerHidden, ref colpito, ref turn, ref riga, ref colonna, boatsPlayer);       //si salva l'ultimo colpito e affondato
-
-                // Conversione char colonna (A-J) in indice 0-based
-                int colonnaNum = (char.ToUpper(colonna) - 'A') + 1;           // 0 per 'A', 1 per 'B', ..., 9 per 'J' , PERò TUTTI AUMENTATI DI 1
-
-                if (player[riga, colonnaNum] == 'X')
-                {
-                    if (drown)
-                    {
-                        naveTrovata = false; // nave da 1 affondata, resta in hunt - FUNZIONA
-                    }
-                    else
-                    {
-                        naveTrovata = true;
-                        rigaColpita = riga;
-                        colonnaColpita = colonnaNum;
-                        colonnaColpitaChar = colonna;
-                    }
-                    break; // In entrambi i casi, chiudi il turno IA dopo un colpo
-                }
-                else
-                {
-                    // Colpo su acqua: chiudi turno IA
-                    break;
-                }
-
-            }
-
-            // Se trovata una nave da affondare, cerca di affondarla (TARGET)
-            if (naveTrovata)
-            {
-                int[] spostamentoRiga = { -1, 1, 0, 0 };
-                int[] spostamentoColonna = { 0, 0, -1, 1 };
-                direzioneTrovata = -1;
 
 
-                // STEP 1: Trova la direzione della nave colpita (vicini)
-                while (direzione < 4)
-                {
-                    while (repeat)
-                    {
-                        int nuovaRiga = rigaColpita + spostamentoRiga[direzione];
-                        int nuovaColonna = colonnaColpita + spostamentoColonna[direzione];
-
-                        direzione++;        //per il ciclo
-
-                        if (nuovaRiga >= 0 && nuovaRiga < 10 && nuovaColonna >= 0 && nuovaColonna < 10)
-                        {
-                            if (player[nuovaRiga, nuovaColonna] == '█')
-                            {
-                                int temp_riga = nuovaRiga;
-                                char temp_colonna = Convert.ToChar(nuovaColonna);
-                                Sparo(ia, iaHidden, player, playerHidden, ref colpito, ref temp_riga, ref temp_colonna, ref turn, ref repeat);
-
-                                //----------------------------------------------------------------------------------------------------------------------------------------------
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                FieldShow(player);  //ti mostra il tuo campo
-                                Console.ForegroundColor = ConsoleColor.White;
-
-                                drown = ColpitoAffondato(boatsPlayer, player);    //se si è verificato un colpito ed affondato nuovo
-                                if (drown)
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;     //red per il colpito ed affondato nemico
-                                    Console.WriteLine("\n\nCOLPITO ED AFFONDATO!!!\n\n");
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                }
-
-                                Console.ForegroundColor = ConsoleColor.White;   //reset del colore
-                                Console.WriteLine("\n\nPremere qualsiasi tasto per continuare");
-                                Console.ReadKey();
-                                Console.Clear();    //pulisci console al momento della fine del turno
-                                                    //-----------------------------------------------------------------------------------------------------------------------------------------------
-
-                                // Chiudi il turno subito dopo lo sparo!
-                                return;
-                            }
-                        }
-                    }
-                }
-                // Se non trova direzione, il turno termina comunque
-            }
-            // In tutti i casi, la funzione termina dopo un solo colpo IA
-
-
-        }
     }
 }
 
